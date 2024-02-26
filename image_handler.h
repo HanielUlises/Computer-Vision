@@ -8,11 +8,13 @@
 class Image {
 public:
     Image(std::string path);
-    Image(const Image& other) = delete; // Copy constructor deleted
-    Image& operator=(const Image& other) = delete; // Copy assignment operator deleted
+    ~Image();
+
+    Image(const Image&) = delete; // Deleted copy constructor
+    Image& operator=(const Image&) = delete; // Deleted copy assignment operator
+
     Image(Image&& other) noexcept; // Move constructor
     Image& operator=(Image&& other) noexcept; // Move assignment operator
-    ~Image();
 
     void fulfill_matrix();
     std::vector<std::vector<char>> get_matrix ();

@@ -1,12 +1,19 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include "image_handler.h"
 
-#include <numeric>
+#include <vector>
 #include <algorithm>
+#include <numeric>
 
 // Function to calculate the percentage similarity between two images
-void get_percentage(Image& image1, Image& image2, double& percentage);
+void get_percentage(const Image& image1, const Image& image2, double& percentage);
 
 // Function to calculate weights between two images
-void get_weights(Image& image1, Image& image2, std::vector<double> &weights);
+void get_weights(const Image& image1, const Image& image2, std::vector<double>& weights);
 
-void get_prediction(Image& image1, Image& image2, double threshold);
+// Function to make prediction based on image comparison
+void get_prediction(const Image& image1, const Image& image2, double threshold);
+
+#endif // UTILS_H
