@@ -23,7 +23,8 @@ int calculate_bmp_width(const std::string& filename) {
 
 // Constructor
 Image::Image(std::string path): path(std::move(path)) {
-    image.open(this->path, std::ifstream::in);
+    image.open(this->path, std::ifstream::binary);
+
     if (image.is_open()) {
         fulfill_matrix();
     }
@@ -57,7 +58,7 @@ Image& Image::operator=(Image&& other) noexcept {
     return *this;
 }
 
-std::vector<std::vector<char>> Image::get_matrix() {
+std::vector<std::vector<char>> Image::get_matrix() const{
     return image_matrix;
 }
 
@@ -67,23 +68,23 @@ void Image::fulfill_matrix() {
         return;
     }
 
-    image_matrix.clear(); // Clear any existing data
+    image_matrix.clear();
 
-    // Determine the width of the image (number of columns)
-    // By knowing the width of the image, one can read that many characters per row.
+    image.seekg(54, std::ios::beg);
+
     int image_width = calculate_bmp_width(path);
+    int padding = (4 - (image_width % 4)) % 4;
     char pixel;
 
     std::vector<char> row;
-    int pixel_count = 0;
-    while (image.get(pixel)) {
-        row.push_back(pixel);
-        pixel_count++;
-
-        // Check if we have read a complete row
-        if (pixel_count % image_width == 0) {
-            image_matrix.push_back(row);
-            row.clear();
+    for (int i = 0; i < image_width; ++i) {
+        for (int j = 0; j < image_width; ++j) {
+            if(image.get(pixel)) {
+                row.push_back(pixel);
+            }
         }
+        image.seekg(padding, std::ios::cur);
+        image_matrix.push_back(row);
+        row.clear();
     }
 }

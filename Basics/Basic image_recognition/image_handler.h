@@ -17,7 +17,7 @@ public:
     Image& operator=(Image&& other) noexcept; // Move assignment operator
 
     void fulfill_matrix();
-    std::vector<std::vector<char>> get_matrix ();
+    std::vector<std::vector<char>> get_matrix () const;
 
 private:
     std::vector<std::vector<char>> image_matrix;
