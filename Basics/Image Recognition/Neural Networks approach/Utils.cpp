@@ -231,7 +231,7 @@ Matrix Neural_Network::feed_forward (Matrix input){
     Matrix output(input.n, input.m);
 
     for(i = 0; i < n - 1; i++){
-        output = sigmoid(add(multiply(input, w[i]), b[i]));
+        output = sigmoid_mat(add(multiply(input, w[i]), b[i]));
     }
 
     return output;
@@ -245,11 +245,11 @@ void Neural_Network::backpropagation(Matrix input, Matrix output){
 
     l.push_back(input);
     for(i = 0; i < n - 1; i++){
-        input = sigmoid(add(multiply(input, w[i]), b[i]));
+        input = sigmoid_mat(add(multiply(input, w[i]), b[i]));
         l.push_back(input);
     }
 
-    delta = term_by_term(substract(input, output), sigmoid_dx(l[n-1]));
+    delta = term_by_term(substract(input, output), sigmoid_dx_mat(l[n-1]));
 
     nabla_b[n - 2].add(delta);
     nabla_w[n - 2].add(multiply(transpose(l[n-1]), delta));
@@ -257,7 +257,7 @@ void Neural_Network::backpropagation(Matrix input, Matrix output){
     for(i = n - 3; i >= 0; i--){
         delta = multiply(delta, transpose(w[i+1]));
 
-        delta = term_by_term(delta, sigmoid_dx(l[i+1]));
+        delta = term_by_term(delta, sigmoid_dx_mat(l[i+1]));
 
         nabla_b[i].add(delta);
         nabla_w[i].add(multiply(transpose(l[i]), delta));

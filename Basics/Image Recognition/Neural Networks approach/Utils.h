@@ -4,6 +4,7 @@
 #include <numeric>
 #include <cmath>
 #include <vector>
+#include <cassert>
 struct xorShift{
     xorShift();
 
