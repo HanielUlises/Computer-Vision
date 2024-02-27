@@ -2,9 +2,9 @@ CXX = g++
 CXXFLAGS = -std=c++20 -Wall -Wextra -pedantic
 LDFLAGS =
 
-OBJ = main.o image_handler.o Utils.o
+OBJ = main.o Utils.o
 
-DEPS = image_handler.h Utils.h
+DEPS = Utils.h
 
 TARGET = prediction
 
