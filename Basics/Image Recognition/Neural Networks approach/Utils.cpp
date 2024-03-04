@@ -2,6 +2,9 @@
 
 xorShift::xorShift (){
     x = 346535763;
+    y = 543212235;
+    z = 4213323423;
+    w = 3423412566;
 }
 
 unsigned xorShift::next (){
@@ -32,7 +35,7 @@ Matrix::Matrix (int rows, int columns){
         a[i] = new double [m];
 
         for(j = 0; j < m; j++){
-            a[i][j] = 0.0;
+            a[i][j] = 0.0f;
         }
     }
 } 
@@ -52,6 +55,13 @@ Matrix::Matrix (const Matrix& x){
             a[i][j] = x.a[i][j];
         }
     }
+}
+
+Matrix::~Matrix (){
+    for(int i = 0; i < n; i++){
+        free(a[i]);
+    }
+    free(a);
 }
 
 void Matrix::operator=(const Matrix& x){
@@ -152,6 +162,19 @@ Matrix transpose (Matrix a){
     return result;
 }
 
+Matrix hadamard (Matrix a, Matrix b){
+    Matrix result (a.n, a.m);
+
+    int i,j;
+
+    for(i = 0; i < a.n; i++){
+        for(j = 0; j < a.m; j++){
+            result[i][j] = a[i][j] * b[i][j];
+        }
+    }
+    return result;
+}
+
 Matrix multiply (Matrix a, Matrix b){
     Matrix result (a.n, a.m);
 
@@ -249,7 +272,7 @@ void Neural_Network::backpropagation(Matrix input, Matrix output){
         l.push_back(input);
     }
 
-    delta = term_by_term(substract(input, output), sigmoid_dx_mat(l[n-1]));
+    delta = hadamard (substract(input, output), sigmoid_dx_mat(l[n-1]));
 
     nabla_b[n - 2].add(delta);
     nabla_w[n - 2].add(multiply(transpose(l[n-1]), delta));
@@ -257,7 +280,7 @@ void Neural_Network::backpropagation(Matrix input, Matrix output){
     for(i = n - 3; i >= 0; i--){
         delta = multiply(delta, transpose(w[i+1]));
 
-        delta = term_by_term(delta, sigmoid_dx_mat(l[i+1]));
+        delta = hadamard(delta, sigmoid_dx_mat(l[i+1]));
 
         nabla_b[i].add(delta);
         nabla_w[i].add(multiply(transpose(l[i]), delta));
