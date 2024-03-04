@@ -19,6 +19,7 @@ struct Matrix{
     Matrix ();
     Matrix (int rows, int columns);
     Matrix (const Matrix& m);
+    ~Matrix ();
 
     void operator =(const Matrix& x);
     double* &operator [](const int& idx);
@@ -49,6 +50,7 @@ double rand_gen ();
 Matrix add (Matrix a, Matrix b);
 Matrix substract (Matrix a, Matrix b);
 Matrix transpose (Matrix a);
+Matrix hadamard (Matrix a, Matrix b);
 Matrix multiply (Matrix a, Matrix b);
 // σ(x) Sigmoid function
 double sigmoid (double x);
