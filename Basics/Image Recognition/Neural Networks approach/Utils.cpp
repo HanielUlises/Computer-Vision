@@ -179,7 +179,7 @@ Matrix multiply (Matrix a, Matrix b){
     Matrix result (a.n, a.m);
 
     int i,j,k;
-    
+        
     for(i = 0; i < a.n; i++){
         for(j = 0; j < b.m; j++){
             for(k = 0; k < a.m; k++){
