@@ -5,6 +5,8 @@
 #include <cmath>
 #include <vector>
 #include <cassert>
+
+//Shift-register generator
 struct xorShift{
     xorShift();
 
@@ -35,6 +37,7 @@ struct Neural_Network{
     double learning_rate;
 
     std::vector<int> size;
+    // When using nabla (∇) i refer to the gradient
     std::vector<Matrix> w, b, nabla_w, nabla_b;
 
     Neural_Network ();
@@ -47,10 +50,15 @@ struct Neural_Network{
 };
 
 double rand_gen ();
+// Basic arithmetical functions
 Matrix add (Matrix a, Matrix b);
 Matrix substract (Matrix a, Matrix b);
+// Matrix tranpose
 Matrix transpose (Matrix a);
+// Hadamard product for matrix multiplication
+// It is a term by term matrix multplication
 Matrix hadamard (Matrix a, Matrix b);
+// The matrix product
 Matrix multiply (Matrix a, Matrix b);
 // σ(x) Sigmoid function
 double sigmoid (double x);
