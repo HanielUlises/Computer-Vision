@@ -5,6 +5,9 @@
 #include <cmath>
 #include <vector>
 #include <cassert>
+#include <string>
+#include <fstream>
+#include <iostream>
 
 //Shift-register generator
 struct xorShift{
@@ -12,8 +15,9 @@ struct xorShift{
 
     unsigned x,y,z,w;
     unsigned next ();
-} random_number_gen ;
+};
 
+extern xorShift random_number_gen;
 struct Matrix{
     int n, m;
     double **a;
@@ -38,6 +42,8 @@ struct Neural_Network{
 
     std::vector<int> size;
     // When using nabla (∇) i refer to the gradient
+    // w stands for weight matrix
+    // b stands for bais matrix
     std::vector<Matrix> w, b, nabla_w, nabla_b;
 
     Neural_Network ();
@@ -48,6 +54,8 @@ struct Neural_Network{
     void backpropagation (Matrix input, Matrix output);
     void train (std::vector<Matrix> inputs, std::vector<Matrix> outputs);
 };
+
+extern std::vector<Matrix> train_input, train_output;
 
 double rand_gen ();
 // Basic arithmetical functions
@@ -68,5 +76,11 @@ double sigmoid_dx (double x);
 Matrix sigmoid_mat (Matrix a);
 Matrix sigmoid_dx_mat (Matrix a);
 
+void time_stamp ();
+
+// Neural network feeding
+void parse_training_data ();
+
+std::vector<int> split(std::string x);
 
 #endif // UTILS_H
