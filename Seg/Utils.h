@@ -8,3 +8,15 @@
 
 void get_histogram();
 void get_LUT();
+void change_color_space();
+
+// Mathematical operations
+void addition();
+void subtraction();
+void multiplication();
+void division();
+
+// Logical operations
+void and_img();
+void or_img();
+void xor_img();
