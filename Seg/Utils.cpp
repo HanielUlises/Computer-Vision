@@ -406,3 +406,58 @@ void xor_img() {
     imshow("XOR Result", result);
     waitKey(0);
 }
+
+void correlation() {
+    std::string original_image = "Resources/image_1.bmp";
+    // Objective to be located
+    std::string template_image = "Resoures/template_test";
+
+    Mat src = imread(original_image);
+    Mat templ = imread(template_image);
+
+    if (!src.data || !templ.data) {
+        std::cout << "Couldn't load the images " << std::endl;
+        exit(1);
+    }
+
+    Mat dst;
+
+    // Memory allocation for each mode
+    int i_width = src.cols - templ.cols + 1;
+    int i_height = src.rows - templ.rows + 1;
+
+    dst.create(i_width, i_height, CV_32FC1);
+
+    // Method by coefficient correlation
+    int match_method = TM_CCOEFF_NORMED;
+
+    // Correlation
+    matchTemplate(src, templ, dst, match_method);
+    normalize(dst, dst, 0, 1, NORM_MINMAX, -1, Mat());
+
+    double min_val, max_val;
+    
+    Point min_loc, max_loc;
+    Point match_loc;
+
+    minMaxLoc(dst, &min_val, &max_val, &min_loc, &max_loc, Mat());
+
+    std::cout << "Min: " << min_val << "Max: " << max_val << std::endl;
+
+    if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
+        match_loc = min_loc;
+    }
+    else {
+        match_loc = max_loc;
+    }
+
+    rectangle(src, match_loc, Point(match_loc.x + templ.cols, match_loc.y + templ.rows), Scalar(255, 0, 0), 4, 8, 0);
+    rectangle(dst, match_loc, Point(match_loc.x + templ.cols, match_loc.y + templ.rows), Scalar::all(0), 4, 8, 0);
+
+    imshow("Source", src);
+    imshow("Result", dst);
+    imshow("Template", templ);
+
+    waitKey(0);
+
+}
