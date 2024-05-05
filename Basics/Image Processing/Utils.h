@@ -30,4 +30,7 @@ void xor_img();         // Perform XOR operation between two images
 void convolution();     // Apply a convolution operation on an image
 void correlation();     // Apply a correlation operation on an image
 
+// Geometrical operations
+void geometrical_operations();
+
 #endif // IMAGE_PROCESSING_H

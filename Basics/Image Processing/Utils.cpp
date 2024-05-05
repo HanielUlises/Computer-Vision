@@ -461,3 +461,43 @@ void correlation() {
     waitKey(0);
 
 }
+
+void geometrical_operations() {
+    std::string img_path = "Resources/fruits.bmp";
+    Mat src, dst;
+
+    src = imread(img_path);
+    if (!src.data) {
+        std::cout << "Couldn't load the image" << std::endl;
+        exit(1);
+    }
+    
+    imshow("Original", src);
+
+    // Scale image
+    resize(src, dst, Size(0, 0), 0.5, 0.5, INTER_LINEAR);
+    imshow("Scaled image", dst);
+
+    // Translation
+    dst = Mat::zeros(src.size(), src.type());
+    src(Rect(100, 100, src.cols - 100, src.rows - 100)).copyTo(dst(Rect(0, 0, src.cols - 100, src.rows - 100)));
+    imshow("Translate image", dst);
+
+    // Rotation
+    int len = max(src.cols, src.rows);
+    double angle = 60.0f;
+
+    Point2f pt(len / 2.0, len / 2.0);
+    Mat r = getRotationMatrix2D(pt, angle, 1.0f);
+
+    warpAffine(src, dst, r, Size(len, len));
+    imshow("Rotated image", dst);
+
+    // Reflection
+    // Flip
+    flip(src, dst, 1);
+    imshow("Reflection: Flip", dst);
+
+    
+    waitKey(0);
+}
