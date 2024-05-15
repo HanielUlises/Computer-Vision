@@ -69,24 +69,25 @@ Matrix::~Matrix (){
 }
 
 void Matrix::operator=(const Matrix& x) {
-    if (this == &x) return;
+    if (this != &x) {
+        for (int i = 0; i < n; i++) {
+            delete[] a[i];
+        }
+        delete[] a;
 
-    for (int i = 0; i < n; i++) {
-        delete[] a[i];
-    }
-    delete[] a;
+        n = x.n;
+        m = x.m;
 
-    n = x.n;
-    m = x.m;
-
-    a = new double*[n];
-    for (int i = 0; i < n; i++) {
-        a[i] = new double[m];
-        for (int j = 0; j < m; j++) {
-            a[i][j] = x.a[i][j];
+        a = new double*[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = new double[m];
+            for (int j = 0; j < m; j++) {
+                a[i][j] = x.a[i][j];
+            }
         }
     }
 }
+
 
 void Matrix::randomize (){
     int i, j;
@@ -181,12 +182,11 @@ Matrix hadamard (Matrix a, Matrix b){
 }
 
 Matrix multiply(Matrix a, Matrix b) {
-    if (a.m != b.n) throw std::invalid_argument("Incompatible matrix dimensions.");
-
     Matrix result(a.n, b.m);
-    for (int i = 0; i < result.n; i++) {
-        for (int j = 0; j < result.m; j++) {
-            result.a[i][j] = 0; // Initialize cell
+    
+    for (int i = 0; i < a.n; i++) {
+        for (int j = 0; j < b.m; j++) {
+            result.a[i][j] = 0;
             for (int k = 0; k < a.m; k++) {
                 result.a[i][j] += a.a[i][k] * b.a[k][j];
             }
@@ -194,6 +194,7 @@ Matrix multiply(Matrix a, Matrix b) {
     }
     return result;
 }
+
 
 double sigmoid (double x){
     return 1.0/(1.0 + std::exp(-x));
