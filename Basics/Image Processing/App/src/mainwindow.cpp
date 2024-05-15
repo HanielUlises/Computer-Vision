@@ -63,15 +63,25 @@ void MainWindow::onFilterImage() {
     int bMax = maxBlue->text().toInt();
 
     filteredImage = loadedImage;
+
+    // For each pixel in image
     for (int y = 0; y < filteredImage.height(); y++) {
         for (int x = 0; x < filteredImage.width(); x++) {
-            QColor color(filteredImage.pixel(x, y));
-            int red = color.red();
+             // Color of the current pixel
+            QColor color(filteredImage.pixel(x, y)); 
+            // Extraction of the red component
+            int red = color.red();   
+            // Extraction of the green component
             int green = color.green();
-            int blue = color.blue();
+            // Extraction of the blue component
+            int blue = color.blue(); 
+
+            // Check if the current pixel's color is within the specified RGB ranges
             if (red < rMin || red > rMax || green < gMin || green > gMax || blue < bMin || blue > bMax) {
+                // If the pixel color is outside the specified range, it goes black
                 filteredImage.setPixel(x, y, qRgb(0, 0, 0));
             }
+            // If the pixel color is within range, it remains unchanged (since we're working on a copy of the image)
         }
     }
 
