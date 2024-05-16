@@ -1,34 +1,43 @@
 #include "mainwindow.h"
+#include "mainmenu.h"
 #include <QColor>
+#include <QMessageBox>
+#include <QIntValidator>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     originalImageLabel = new QLabel(this);
     filteredImageLabel = new QLabel(this);
 
+    int imageWidth = 400;
+    int imageHeight = 300;
+    originalImageLabel->setFixedSize(imageWidth, imageHeight);
+    filteredImageLabel->setFixedSize(imageWidth, imageHeight);
+
+    setPlaceholderImages();
+
     loadButton = new QPushButton("Load Image", this);
     filterButton = new QPushButton("Filter Image", this);
     saveButton = new QPushButton("Save Filtered Image", this);
+    backButton = new QPushButton("← Back to Main Menu", this);
 
-    minRed = new QLineEdit("0", this);
-    maxRed = new QLineEdit("255", this);
-    minGreen = new QLineEdit("0", this);
-    maxGreen = new QLineEdit("255", this);
-    minBlue = new QLineEdit("0", this);
-    maxBlue = new QLineEdit("255", this);
+    setupSliders(minRedSlider, maxRedSlider);
+    setupSliders(minGreenSlider, maxGreenSlider);
+    setupSliders(minBlueSlider, maxBlueSlider);
 
+    // Layout for color range input
     QVBoxLayout *colorLayout = new QVBoxLayout;
     colorLayout->addWidget(new QLabel("Min Red:"));
-    colorLayout->addWidget(minRed);
+    colorLayout->addWidget(minRedSlider);
     colorLayout->addWidget(new QLabel("Max Red:"));
-    colorLayout->addWidget(maxRed);
+    colorLayout->addWidget(maxRedSlider);
     colorLayout->addWidget(new QLabel("Min Green:"));
-    colorLayout->addWidget(minGreen);
+    colorLayout->addWidget(minGreenSlider);
     colorLayout->addWidget(new QLabel("Max Green:"));
-    colorLayout->addWidget(maxGreen);
+    colorLayout->addWidget(maxGreenSlider);
     colorLayout->addWidget(new QLabel("Min Blue:"));
-    colorLayout->addWidget(minBlue);
+    colorLayout->addWidget(minBlueSlider);
     colorLayout->addWidget(new QLabel("Max Blue:"));
-    colorLayout->addWidget(maxBlue);
+    colorLayout->addWidget(maxBlueSlider);
 
     QHBoxLayout *hLayout = new QHBoxLayout;
     hLayout->addWidget(originalImageLabel);
@@ -40,57 +49,94 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     vLayout->addWidget(loadButton);
     vLayout->addWidget(filterButton);
     vLayout->addWidget(saveButton);
+    vLayout->addWidget(backButton);
 
     connect(loadButton, &QPushButton::clicked, this, &MainWindow::onLoadImage);
     connect(filterButton, &QPushButton::clicked, this, &MainWindow::onFilterImage);
     connect(saveButton, &QPushButton::clicked, this, &MainWindow::onSaveImage);
+    connect(backButton, &QPushButton::clicked, this, &MainWindow::onBackToMainMenu);
+}
+
+void MainWindow::setupSliders(QSlider*& minSlider, QSlider*& maxSlider) {
+    minSlider = new QSlider(Qt::Horizontal, this);
+    maxSlider = new QSlider(Qt::Horizontal, this);
+    
+    minSlider->setRange(0, 255);
+    maxSlider->setRange(0, 255);
+
+    minSlider->setValue(0);
+    maxSlider->setValue(255);
 }
 
 void MainWindow::onLoadImage() {
     QString filePath = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.png *.jpg *.bmp)");
     if (!filePath.isEmpty()) {
-        loadedImage.load(filePath);
-        originalImageLabel->setPixmap(QPixmap::fromImage(loadedImage));
+        if (!loadedImage.load(filePath)) {
+            QMessageBox::warning(this, "Error", "Failed to load the image.");
+            return;
+        }
+        updateImageDisplay();
     }
 }
 
 void MainWindow::onFilterImage() {
-    int rMin = minRed->text().toInt();
-    int rMax = maxRed->text().toInt();
-    int gMin = minGreen->text().toInt();
-    int gMax = maxGreen->text().toInt();
-    int bMin = minBlue->text().toInt();
-    int bMax = maxBlue->text().toInt();
+    int rMin = minRedSlider->value();
+    int rMax = maxRedSlider->value();
+    int gMin = minGreenSlider->value();
+    int gMax = maxGreenSlider->value();
+    int bMin = minBlueSlider->value();
+    int bMax = maxBlueSlider->value();
 
     filteredImage = loadedImage;
 
-    // For each pixel in image
     for (int y = 0; y < filteredImage.height(); y++) {
         for (int x = 0; x < filteredImage.width(); x++) {
-             // Color of the current pixel
-            QColor color(filteredImage.pixel(x, y)); 
-            // Extraction of the red component
-            int red = color.red();   
-            // Extraction of the green component
+            QColor color(filteredImage.pixel(x, y));
+            int red = color.red();
             int green = color.green();
-            // Extraction of the blue component
-            int blue = color.blue(); 
+            int blue = color.blue();
 
-            // Check if the current pixel's color is within the specified RGB ranges
-            if (red < rMin || red > rMax || green < gMin || green > gMax || blue < bMin || blue > bMax) {
-                // If the pixel color is outside the specified range, it goes black
+            // Only keep the pixel if it falls within all specified ranges
+            if (red >= rMin && red <= rMax && green >= gMin && green <= gMax && blue >= bMin && blue <= bMax) {
+                // Pixel is within range, keep it as is
+                filteredImage.setPixel(x, y, qRgb(red, green, blue));
+            } else {
+                // Pixel is out of range, set it to black
                 filteredImage.setPixel(x, y, qRgb(0, 0, 0));
             }
-            // If the pixel color is within range, it remains unchanged (since we're working on a copy of the image)
         }
     }
 
-    filteredImageLabel->setPixmap(QPixmap::fromImage(filteredImage));
+    updateImageDisplay();
 }
 
 void MainWindow::onSaveImage() {
     QString filePath = QFileDialog::getSaveFileName(this, "Save Image", "", "PNG Files (*.png);;JPEG Files (*.jpg);;BMP Files (*.bmp)");
     if (!filePath.isEmpty()) {
-        filteredImage.save(filePath);
+        if (!filteredImage.save(filePath)) {
+            QMessageBox::warning(this, "Error", "Failed to save the image.");
+        }
     }
+}
+
+void MainWindow::onBackToMainMenu() {
+    MainMenu *mainMenu = new MainMenu();
+    mainMenu->show();
+    this->close();
+}
+
+void MainWindow::updateImageDisplay() {
+    originalImageLabel->setPixmap(QPixmap::fromImage(loadedImage).scaled(originalImageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    filteredImageLabel->setPixmap(QPixmap::fromImage(filteredImage).scaled(filteredImageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+
+void MainWindow::setPlaceholderImages() {
+    int imageWidth = originalImageLabel->width();
+    int imageHeight = originalImageLabel->height();
+
+    QPixmap placeholder(imageWidth, imageHeight);
+    placeholder.fill(Qt::gray);
+
+    originalImageLabel->setPixmap(placeholder);
+    filteredImageLabel->setPixmap(placeholder);
 }
