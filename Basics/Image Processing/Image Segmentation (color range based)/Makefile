@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++20 -Wall -Wextra -fPIC -Iinclude $(shell pkg-config --cflags Qt5Widgets Qt5Gui Qt5Core)
+CXXFLAGS = -std=c++20 -fPIC -Iinclude $(shell pkg-config --cflags Qt5Widgets Qt5Gui Qt5Core)
 LDFLAGS = $(shell pkg-config --libs Qt5Widgets Qt5Gui Qt5Core)
 
 SRC_DIR = src
@@ -8,7 +8,7 @@ BIN_DIR = bin
 INCLUDE_DIR = include
 MOC_DIR = moc
 
-TARGET = $(BIN_DIR)/my_program
+TARGET = $(BIN_DIR)/img_seg_app
 
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 HEADERS = $(wildcard $(INCLUDE_DIR)/*.h)
