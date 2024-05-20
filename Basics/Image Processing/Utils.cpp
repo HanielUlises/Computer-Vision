@@ -501,3 +501,192 @@ void geometrical_operations() {
     
     waitKey(0);
 }
+
+void contrast_enhancement() {
+    std::string original = "Resources/low_contrast.jpg";
+    Mat original_img, equalized_img;
+
+    original_img = imread(original, IMREAD_GRAYSCALE);
+    if (!original_img.data) {
+        std::cout << "Couldn't load the image" << std::endl;
+        exit(1);
+    }
+
+    int hist_size = 256;
+
+    float range [] = {0, 256};
+    const float *hist_range = { range };
+
+    // Image histogram 
+    int hist_w = 512; int hist_h = 400;
+    int bin_w = cvRound((double)hist_w / hist_size);
+
+    Mat hist_image(hist_h, hist_w, CV_8UC3, Scalar(0, 0, 0));
+    Mat equalized_hist_image(hist_h, hist_w, CV_8UC3, Scalar(0, 0, 0));
+
+    // Histogram calculations
+    Mat original_hist, normalized_hist, equalized_hist, equalized_normalized_hist;
+    calcHist(&original_img, 1, 0, Mat(), original_hist, 1, &hist_size, &hist_range, true, false);
+
+    std::cout << "Original histogram" << std::endl;
+    
+    for (int h = 0; h < hist_size; h++) {
+        float bin_val = original_hist.at<float>(h);
+        std::cout << " " << bin_val;
+    }
+    std::cout << std::endl;
+    
+    // Normalizing the results to [0, hist_image.rows]
+    normalize(original_hist, normalized_hist, 0, hist_image.rows, NORM_MINMAX, -1, Mat());
+
+    std::cout << "Normalized histogram" << std::endl;
+    for (int h = 0; h < hist_size; h++) {
+        float bin_val = normalized_hist.at<float>(h);
+        std::cout << " " << bin_val;
+    }
+    std::cout << std::endl;
+
+    // Equalization of a histogram from a grayscale image
+    equalizeHist(original_img, equalized_img);
+    calcHist(&equalized_img, 1, 0, Mat(), equalized_hist, 1, &hist_size, &hist_range, true, false);
+
+    std::cout << "Equalized histogram" << std::endl;
+    for (int h = 0; h < hist_size; h++) {
+        float bin_val = equalized_hist.at<float>(h);
+        std::cout << " " << bin_val;
+    }
+    std::cout << std::endl;
+
+    // Normalized equalized histogram
+    normalize(equalized_hist, equalized_normalized_hist, 0, hist_image.rows, NORM_MINMAX, -1, Mat());
+    std::cout << "Normalized equalized histogram" << std::endl;
+    for (int h = 0; h < hist_size; h++) {
+        float bin_val = equalized_normalized_hist.at<float>(h);
+        std::cout << " " << bin_val;
+    }
+    std::cout << std::endl;
+
+    // Plotting histograms
+    for (int i = 1; i < hist_size; i++) {
+        line(hist_image,
+            Point(bin_w * (i), hist_w),
+            Point(bin_w * (i), hist_h - cvRound(normalized_hist.at<float>(i))),
+            Scalar(255, 0, 0),
+            bin_w,
+            8,
+            0
+        );
+
+        line(equalized_hist_image,
+            Point(bin_w * (i), hist_w),
+            Point(bin_w * (i), hist_h - cvRound(equalized_normalized_hist.at<float>(i))),
+            Scalar(255, 0, 0),
+            bin_w,
+            8,
+            0
+        );
+    }
+
+    // Showing images
+    namedWindow("Original image", WINDOW_AUTOSIZE);
+    namedWindow("Equalized image", WINDOW_AUTOSIZE);
+    namedWindow("Original histogram", WINDOW_AUTOSIZE);
+    namedWindow("Original histogram", WINDOW_AUTOSIZE);
+
+    imshow("Original image", original_img);
+    imshow("Equalized image", equalized_img);
+    imshow("Original histogram", hist_image);
+    imshow("Equalized histogram", equalized_hist_image);
+
+    waitKey(0);
+}
+
+void edge_enhancement() {
+    std::string original = "Resources/low_contrast.jpg";
+    Mat original_img;
+
+    original_img = imread(original, IMREAD_GRAYSCALE);
+    if (!original_img.data) {
+        std::cout << "Couldn't load the image" << std::endl;
+        exit(1);
+    }
+
+    // Filtered image matrix
+    Mat img_filt(original_img.cols, original_img.rows, CV_8U);
+    Mat kernel(3, 3, CV_8S);
+
+    kernel.at<char>(0) = -1; kernel.at<char>(1) = -1; kernel.at<char>(2) = -1;
+    kernel.at<char>(3) = -1; kernel.at<char>(4) = 9; kernel.at<char>(5) = -1;
+    kernel.at<char>(6) = -1; kernel.at<char>(7) = -1; kernel.at<char>(8) = -1;
+
+    filter2D(original_img, img_filt, CV_8U, kernel);
+
+    namedWindow("Original image");
+    imshow("Original image", original_img);
+    namedWindow("Edge enhancement");
+    imshow("Edge enhancement", img_filt);
+
+    waitKey(0);
+}
+
+void edge_detection() {
+    std::string img_path = "Resources/fruits.bmp";
+    std::string window_name;
+    Mat src, grad;
+
+    src = imread(img_path, IMREAD_COLOR);
+
+    if (src.empty()) {
+        std::cout << "Couldn't load the image" << std::endl;
+        exit(1);
+    }
+
+    Mat grad_x, grad_y;
+    Mat abs_grad_x, abs_grad_y;
+
+    int selection;
+
+    // T1 and T2 for canny 
+    int lower_threshold = 50;
+    int upper_threshold = 150;
+
+    std::cout << "Choose an option:" << std::endl;
+    std::cout << "1) Sobel" << std::endl;
+    std::cout << "2) Canny" << std::endl;
+    std::cin >> selection;
+
+    switch (selection) {
+    case 1:
+        window_name = "Sobel - Simple Edge Detection";
+        int scale, delta, depth;
+        scale = 1;
+        delta = 0;
+        depth = CV_16S;
+
+        GaussianBlur(src, src, Size(3, 3), 0, 0, BORDER_DEFAULT);
+
+        Sobel(src, grad_x, depth, 1, 0, 3, scale, delta, BORDER_DEFAULT);
+        convertScaleAbs(grad_x, abs_grad_x);
+
+        Sobel(src, grad_y, depth, 0, 1, 3, scale, delta, BORDER_DEFAULT);
+        convertScaleAbs(grad_y, abs_grad_y);
+
+        addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad);
+        threshold(grad, grad, 80, 255, THRESH_BINARY);
+        break;
+    case 2:
+        window_name = "Canny - Edge Detection";
+        Canny(src, grad, lower_threshold, upper_threshold);
+        break;
+    default:
+        std::cout << "Invalid selection" << std::endl;
+        return;
+    }
+
+    namedWindow("Original Image", WINDOW_AUTOSIZE);
+    imshow("Original Image", src);
+    namedWindow(window_name, WINDOW_AUTOSIZE);
+    imshow(window_name, grad);
+
+    waitKey(0);
+}
