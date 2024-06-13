@@ -33,4 +33,13 @@ void correlation();     // Apply a correlation operation on an image
 // Geometrical operations
 void geometrical_operations();
 
+// Contrast modification
+void contrast_enhancement();
+
+// Edge enhancement
+void edge_enhancement();
+
+// Gradient based detection
+void edge_detection();
+
 #endif // IMAGE_PROCESSING_H
