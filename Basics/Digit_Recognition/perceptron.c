@@ -1,5 +1,7 @@
 #include "perceptron.h"
+#include <omp.h>
 
+/**
 // Sigmoid activation function
 static double sigmoid(double x) {
     return 1.0 / (1.0 + exp(-x));
@@ -8,6 +10,28 @@ static double sigmoid(double x) {
 // Derivative of the sigmoid function
 static double sigmoid_derivative(double x) {
     return x * (1.0 - x);
+}
+
+*/
+
+// Softmax activation function
+static void softmax(double* input, double* output, int length) {
+    double max_input = input[0];
+    for (int i = 1; i < length; i++) {
+        if (input[i] > max_input) {
+            max_input = input[i];
+        }
+    }
+
+    double sum = 0.0;
+    for (int i = 0; i < length; i++) {
+        output[i] = exp(input[i] - max_input);
+        sum += output[i];
+    }
+
+    for (int i = 0; i < length; i++) {
+        output[i] /= sum;
+    }
 }
 
 Perceptron* create_perceptron(int input_size, int num_classes) {
@@ -29,6 +53,7 @@ Perceptron* create_perceptron(int input_size, int num_classes) {
 
 // Train the perceptron
 void train_perceptron(Perceptron* p, double **inputs, double **labels, int num_samples, int epochs, double learning_rate) {
+    #pragma omp parallel for
     for (int epoch = 0; epoch < epochs; epoch++) {
         for (int sample = 0; sample < num_samples; sample++) {
             double* input = inputs[sample];
@@ -43,16 +68,17 @@ void train_perceptron(Perceptron* p, double **inputs, double **labels, int num_s
                     weighted_sum[j] += input[i] * p->weights[i * p->num_classes + j];
                 }
                 weighted_sum[j] += p->biases[j];
-                output[j] = sigmoid(weighted_sum[j]);
             }
+
+            softmax(weighted_sum, output, p->num_classes);
 
             // Backward pass and weight update
             for (int j = 0; j < p->num_classes; j++) {
                 double error = label[j] - output[j];
                 for (int i = 0; i < p->input_size; i++) {
-                    p->weights[i * p->num_classes + j] += learning_rate * error * sigmoid_derivative(output[j]) * input[i];
+                    p->weights[i * p->num_classes + j] += learning_rate * error * input[i];
                 }
-                p->biases[j] += learning_rate * error * sigmoid_derivative(output[j]);
+                p->biases[j] += learning_rate * error;
             }
         }
     }
@@ -68,9 +94,10 @@ int predict_perceptron(Perceptron* p, double *input) {
             weighted_sum[j] += input[i] * p->weights[i * p->num_classes + j];
         }
         weighted_sum[j] += p->biases[j];
-        output[j] = sigmoid(weighted_sum[j]);
     }
-    // Find the class with the highest output value
+
+    softmax(weighted_sum, output, p->num_classes);
+
     int predicted_class = 0;
     double max_output = output[0];
     for (int j = 1; j < p->num_classes; j++) {
