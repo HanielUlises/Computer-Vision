@@ -1,28 +1,27 @@
 #ifndef IMAGE_HANDLER_H
 #define IMAGE_HANDLER_H
 
+#include <vector>
 #include <string>
 #include <fstream>
-#include <vector>
 
 class Image {
 public:
     Image(std::string path);
     ~Image();
+    Image(Image&& other) noexcept;
+    Image& operator=(Image&& other) noexcept;
 
-    Image(const Image&) = delete; // Deleted copy constructor
-    Image& operator=(const Image&) = delete; // Deleted copy assignment operator
-
-    Image(Image&& other) noexcept; // Move constructor
-    Image& operator=(Image&& other) noexcept; // Move assignment operator
+    std::vector<std::vector<char>> get_matrix() const;
 
     void fulfill_matrix();
-    std::vector<std::vector<char>> get_matrix () const;
 
 private:
-    std::vector<std::vector<char>> image_matrix;
-    std::ifstream image;
     std::string path;
+    std::ifstream image;
+    std::vector<std::vector<char>> image_matrix;
 };
+
+int calculate_bmp_width(const std::string& filename);
 
 #endif // IMAGE_HANDLER_H

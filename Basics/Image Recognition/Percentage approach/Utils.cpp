@@ -1,23 +1,21 @@
 #include "Utils.h"
 #include <iostream>
-#include <cmath> // For std::abs
+#include <vector>
+#include <numeric>
+#include <cmath>
 
 // Function to calculate the percentage similarity between two images
-double calculate_percentage_similarity(const Image& image1, const Image& image2) {
-    auto image_matrix1 = image1.get_matrix();
-    auto image_matrix2 = image2.get_matrix();
+void get_percentage(const Image& image1, const Image& image2, double& percentage) {
+    std::vector<std::vector<char>> image_matrix1 = image1.get_matrix();
+    std::vector<std::vector<char>> image_matrix2 = image2.get_matrix();
 
-    // Ensure both images have the same dimensions (for simplicity)
-    if (image_matrix1.size() != image_matrix2.size() || image_matrix1[0].size() != image_matrix2[0].size()) {
-        std::cerr << "Images must have the same dimensions for comparison." << std::endl;
-        return 0.0;
-    }
-
+    // Assuming both images have the same dimensions
     int total_pixels = 0;
     int matching_pixels = 0;
 
     for (size_t i = 0; i < image_matrix1.size(); ++i) {
-        for (size_t j = 0; j < image_matrix1[i].size(); ++j) {
+        for (size_t j = 0; j < image_matrix2[i].size(); ++j) {
+            // Compare pixel values and count matching pixels
             if (image_matrix1[i][j] == image_matrix2[i][j]) {
                 matching_pixels++;
             }
@@ -25,45 +23,49 @@ double calculate_percentage_similarity(const Image& image1, const Image& image2)
         }
     }
 
-    return total_pixels > 0 ? static_cast<double>(matching_pixels) / total_pixels * 100.0 : 0.0;
-}
-
-// Function to predict how similar two images are
-void predict_image_similarity(const Image& image1, const Image& image2) {
-    double similarity_percentage = calculate_percentage_similarity(image1, image2);
-
-    std::cout << "Similarity Percentage: " << similarity_percentage << "%" << std::endl;
-
-    // Determine the similarity level based on the percentage
-    if (similarity_percentage > 90.0) {
-        std::cout << "The images are highly similar." << std::endl;
-    } else if (similarity_percentage > 70.0) {
-        std::cout << "The images are moderately similar." << std::endl;
-    } else if (similarity_percentage > 50.0) {
-        std::cout << "The images have some similarity." << std::endl;
+    // Calculate percentage similarity
+    if (total_pixels > 0) {
+        percentage = static_cast<double>(matching_pixels) / total_pixels * 100.0;
     } else {
-        std::cout << "The images are not very similar." << std::endl;
+        percentage = 0.0;
+    }
+    std::cout << "Percentage of similarity: " << percentage << std::endl;
+}
+
+// Function to calculate weights between two images
+void get_weights(const Image& image1, const Image& image2, std::vector<double>& weights) {
+    std::vector<std::vector<char>> image_matrix1 = image1.get_matrix();
+    std::vector<std::vector<char>> image_matrix2 = image2.get_matrix();
+
+    // Both images must have the same dimensions
+    for (size_t i = 0; i < image_matrix1.size(); ++i) {
+        for (size_t j = 0; j < image_matrix1[i].size(); ++j) {
+            weights.push_back(std::abs(image_matrix1[i][j] - image_matrix2[i][j]));
+        }
     }
 }
 
-std::vector<double> computeMSEGradient(const std::vector<double>& predictions, const std::vector<double>& targets) {
-    std::vector<double> gradients(predictions.size());
-    for (size_t i = 0; i < predictions.size(); ++i) {
-        gradients[i] = 2.0 * (predictions[i] - targets[i]);
+// Function to predict similarity between two images based on percentage similarity
+void get_prediction_percentage(const Image& image1, const Image& image2, double threshold) {
+    double percentage;
+    get_percentage(image1, image2, percentage);
+
+    if (percentage >= threshold * 100) {
+        std::cout << "Images are similar based on percentage similarity." << std::endl;
+    } else {
+        std::cout << "Images are not similar based on percentage similarity." << std::endl;
     }
-    return gradients;
 }
 
-void softmax(std::vector<double>& outputs) {
-    double max = *max_element(outputs.begin(), outputs.end());
-    double sum = 0.0;
+// Function to predict similarity between two images based on exhaustive search (total weights)
+void get_prediction_exhaustive(const Image& image1, const Image& image2, double threshold) {
+    std::vector<double> weights;
+    get_weights(image1, image2, weights);
 
-    for (size_t i = 0; i < outputs.size(); ++i) {
-        outputs[i] = exp(outputs[i] - max); // Improve numerical stability
-        sum += outputs[i];
-    }
-
-    for (size_t i = 0; i < outputs.size(); ++i) {
-        outputs[i] /= sum;
+    double totalWeight = std::accumulate(weights.begin(), weights.end(), 0.0);
+    if (totalWeight <= threshold) {
+        std::cout << "Images are similar based on total weight." << std::endl;
+    } else {
+        std::cout << "Images are not similar based on total weight." << std::endl;
     }
 }
