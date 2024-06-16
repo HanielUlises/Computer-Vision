@@ -3,6 +3,7 @@
 #include <utility>
 #include <fstream>
 
+// Function to calculate BMP image width
 int calculate_bmp_width(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary);
 
@@ -11,7 +12,7 @@ int calculate_bmp_width(const std::string& filename) {
         return -1;
     }
 
-    file.seekg(18); 
+    file.seekg(18);
 
     uint32_t width;
     file.read(reinterpret_cast<char*>(&width), sizeof(width));
@@ -58,10 +59,12 @@ Image& Image::operator=(Image&& other) noexcept {
     return *this;
 }
 
-std::vector<std::vector<char>> Image::get_matrix() const{
+// Method to get the image matrix
+std::vector<std::vector<char>> Image::get_matrix() const {
     return image_matrix;
 }
 
+// Method to fulfill the image matrix
 void Image::fulfill_matrix() {
     if (!image.is_open()) {
         std::cerr << "Error: Unable to open file " << path << std::endl;
@@ -70,20 +73,20 @@ void Image::fulfill_matrix() {
 
     image_matrix.clear();
 
-    image.seekg(54, std::ios::beg);
+    image.seekg(54, std::ios::beg); // Move to the pixel data start position
 
     int image_width = calculate_bmp_width(path);
-    int padding = (4 - (image_width % 4)) % 4;
+    int padding = (4 - (image_width % 4)) % 4; // Calculate padding for each row
     char pixel;
 
     std::vector<char> row;
     for (int i = 0; i < image_width; ++i) {
         for (int j = 0; j < image_width; ++j) {
-            if(image.get(pixel)) {
+            if (image.get(pixel)) {
                 row.push_back(pixel);
             }
         }
-        image.seekg(padding, std::ios::cur);
+        image.seekg(padding, std::ios::cur); // Skip the padding
         image_matrix.push_back(row);
         row.clear();
     }

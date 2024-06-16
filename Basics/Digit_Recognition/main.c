@@ -9,7 +9,7 @@
 #define TEST_IMAGES_FILE  "t10k-images-idx3-ubyte"
 #define TEST_LABELS_FILE  "t10k-labels-idx1-ubyte"
 
-#define EPOCHS 1000
+#define EPOCHS 250
 #define LEARNING_RATE 0.1
 #define MODEL_FILE "perceptron_model.dat"
 #define CANVAS_SIZE 28
