@@ -73,7 +73,7 @@ void train_perceptron_cuda(Perceptron* p, double **inputs, double **labels, int 
     cudaMemcpy(d_inputs, *inputs, inputs_size, cudaMemcpyHostToDevice);
     cudaMemcpy(d_labels, *labels, labels_size, cudaMemcpyHostToDevice);
 
-    int block_size = 256; // Adjust based on your GPU capabilities
+    int block_size = 256; // Adjust based on your GPU capabilities (mine is Nvidia RTX 3060 Mobile/Max-Q) 
     int num_blocks = (num_samples + block_size - 1) / block_size;
 
     for (int epoch = 0; epoch < epochs; epoch++) {
