@@ -2,13 +2,11 @@
 #include "mnist.h"
 #include "cnn.h"
 
-// Global variables for CNN and MNIST data
 ConvLayer conv_layer;
 DenseLayer dense_layer;
 MNIST_Data *mnist_data;
 uint8_t *mnist_labels;
 
-// Function to update the GUI with predictions
 void update_prediction(GtkWidget *widget, gpointer data) {
     // Example: Load a test image and run prediction
     float *test_image = (float *)malloc(conv_layer.input_size * conv_layer.input_size * sizeof(float));
