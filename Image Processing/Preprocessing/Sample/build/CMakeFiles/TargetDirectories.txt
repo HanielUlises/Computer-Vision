@@ -1,0 +1,3 @@
+/home/haniel/Projects/Computer-Vision/Image Processing/Preprocessing/Sample/build/CMakeFiles/sampleCode.dir
+/home/haniel/Projects/Computer-Vision/Image Processing/Preprocessing/Sample/build/CMakeFiles/edit_cache.dir
+/home/haniel/Projects/Computer-Vision/Image Processing/Preprocessing/Sample/build/CMakeFiles/rebuild_cache.dir
