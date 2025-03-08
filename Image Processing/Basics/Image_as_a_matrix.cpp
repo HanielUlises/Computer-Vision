@@ -2,7 +2,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
-#include "dataPath.hpp"
 
 using namespace std;
 using namespace cv;
@@ -32,7 +31,7 @@ string type2str(int type) {
 
 int main(void)
 {
-	string imagePath = DATA_PATH + "/images/number_zero.jpg";
+	string imagePath = "/images/number_zero.jpg";
 
 	// Read image in Grayscale format
 	Mat testImage = imread(imagePath,0);

@@ -50,11 +50,14 @@
     "ctime": "cpp",
     "mnist.h": "c"
   },
+  "C_Cpp.errorSquiggles": "Enabled",
+  "C_Cpp.intelliSenseEngine": "clang",
+  "C_Cpp.default.compilerPath": "g++",
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
   "C_Cpp_Runner.debuggerPath": "gdb",
-  "C_Cpp_Runner.cStandard": "",
-  "C_Cpp_Runner.cppStandard": "",
+  "C_Cpp_Runner.cStandard": "gnu17",
+  "C_Cpp_Runner.cppStandard": "gnu++20",
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.useMsvc": false,
   "C_Cpp_Runner.warnings": [
@@ -88,7 +91,11 @@
   "C_Cpp_Runner.warningsAsError": false,
   "C_Cpp_Runner.compilerArgs": [],
   "C_Cpp_Runner.linkerArgs": [],
-  "C_Cpp_Runner.includePaths": [],
+  "C_Cpp_Runner.includePaths": [
+    "${workspaceFolder}/include",
+    "/usr/include",
+    "/usr/local/include"
+  ],
   "C_Cpp_Runner.includeSearch": [
     "*",
     "**/*"
