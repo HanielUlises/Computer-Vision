@@ -20,9 +20,6 @@ int main (){
     cv::Mat image = cv::imread(path);
     if(image.empty()) std::cout << "Image file not found" << std::endl;
 
-    cv::Mat image = cv::imread(path);
-    if(image.empty()) std::cout << "Image file not found" << std::endl;
-
     image.convertTo(image, CV_32F, 1.0/255);
     cv::Mat gray_img;
     cv::cvtColor(image, gray_img, cv::COLOR_BGR2GRAY);
