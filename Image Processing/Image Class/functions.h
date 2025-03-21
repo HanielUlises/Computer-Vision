@@ -103,4 +103,96 @@ void HFlip(Image &img) {
     display_RGB(img);
 }
 
+// Rotations
+void Rrotate(Image &img){
+    Image new_image = Image(img.columns, img.rows, img.depth);
+    for(int i = 0; i < img.rows; ++i){
+        for(int j = 0; j < img.columns; ++j){
+            new_image.set_pixel_val_ch(img.columns - j - 1, i , 0, img.get_pixel_val_ch(i, j, 0));
+            new_image.set_pixel_val_ch(img.columns - j - 1, i , 1, img.get_pixel_val_ch(i, j, 1));
+            new_image.set_pixel_val_ch(img.columns - j - 1, i , 2, img.get_pixel_val_ch(i, j, 2));
+        }
+    }
+    display_RGB(img);
+    display_RGB(new_image);
+}
+
+void Lrotate(Image &img){
+    Image new_image = Image(img.columns, img.rows, img.depth);
+    for(int i = 0; i < img.rows; ++i){
+        for(int j =0; j < img.columns; ++j){
+            new_image.set_pixel_val_ch(j, img.rows - i - 1, 0, img.get_pixel_val_ch(i, j, 0));
+            new_image.set_pixel_val_ch(j, img.rows - i - 1 , 0, img.get_pixel_val_ch(i, j, 0));
+            new_image.set_pixel_val_ch(j, img.rows - i - 1 , 0, img.get_pixel_val_ch(i, j, 0));
+        }
+    }
+}
+
+// Binarization
+
+Image threshold_val (int threshold, Image &img){
+    int pixel = 0, val = 0;
+    Image new_image (img.rows, img.columns, img.depth);
+
+    for(int i = 0; i < img.rows; ++i){
+        for(int j = 0; j < img.columns; ++j){
+            pixel = img.get_pixel_val(i, j);
+            val = pixel >= threshold ? 255 : 0;
+            new_image.set_pixel_val(i, j, val);
+        }
+    }
+    display_gray(img);
+    display_gray(new_image);
+    return new_image;
+}
+
+Image otsu_binarize(Image &img){
+    float sum_b = 0;
+    float w_B = 0;
+    float w_F = 0;
+    float var_max = 0;
+    
+    int threshold;
+
+    std::vector<float> histogram (255, 0.0f);
+    float sum = 0;
+
+    for(int i = 0; i < 255; ++i){
+        histogram[i] = 0;
+    }
+
+    for(int i = 0; i < img.rows; ++i){
+        for(int j = 0; j < img.columns; ++j){
+            int pixel = img.get_pixel_val(i, j);
+            histogram[pixel]++;
+        }
+    }
+
+    for(int i = 0; i < 255; ++i){
+        sum += histogram[i] * static_cast<float> (i);
+    }
+
+    for(int t = 0; t < 255; t++){
+        w_B += histogram[t];
+        if(w_B == 0) continue;
+
+        w_F = (img.rows * img.columns) - w_B;
+        if(w_F == 0) break;
+
+        sum_b += static_cast<float> (t * histogram[t]);
+        
+        float m_B = sum_b/w_B;
+        float m_F = (static_cast<float>(sum - sum_b)) / w_F;
+
+        float var_between = w_B * w_F * (m_B * m_F) * (m_B - m_F);
+
+        if(var_between > var_max){
+            var_max = var_max;
+            threshold = t;
+        }
+    }
+    std::cout << "Otsu threshold value :" << threshold << std::endl;
+    return threshold_val(threshold, img);
+}
+
 #endif
