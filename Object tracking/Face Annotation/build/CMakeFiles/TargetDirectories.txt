@@ -1,3 +1,0 @@
-/home/haniel/Projects/C++/Computer-Vision/Object tracking/Face Annotation/build/CMakeFiles/RectangleDrawing.dir
-/home/haniel/Projects/C++/Computer-Vision/Object tracking/Face Annotation/build/CMakeFiles/edit_cache.dir
-/home/haniel/Projects/C++/Computer-Vision/Object tracking/Face Annotation/build/CMakeFiles/rebuild_cache.dir
