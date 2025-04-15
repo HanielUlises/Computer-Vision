@@ -1,5 +1,5 @@
 // ShapeTracker.cpp
-#include "ShapeTracker.h"
+#include "ShapeTracker.hpp"
 
 ShapeTracker::ShapeTracker() : lower_hue(cv::Scalar(29, 86, 6)), upper_hue(cv::Scalar(64, 255, 255)) {}
 
