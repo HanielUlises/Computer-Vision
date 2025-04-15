@@ -1,4 +1,4 @@
-#include "sift.h"
+#include "SIFT.hpp"
 #include <fstream>
 #include <iostream>
 

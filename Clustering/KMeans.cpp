@@ -1,4 +1,4 @@
-#include "KMeans.h"
+#include "KMeans.hpp"
 #include <opencv2/opencv.hpp>
 #include <Eigen/Dense>
 #include <iostream>
