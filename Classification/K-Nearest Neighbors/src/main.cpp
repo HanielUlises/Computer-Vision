@@ -6,71 +6,69 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <opencv2/opencv.hpp>
-#include "KNN.h"
+#include "knn.hpp"
 
-class MainWindow : public QWidget {
+class main_window : public QWidget {
 public:
-    MainWindow(QWidget *parent = nullptr) : QWidget(parent), knn(3) { // Initialize KNN with k=3
-        setupUI();
+    main_window(QWidget *parent = nullptr) : QWidget(parent), knn_(3) {
+        setup_ui();
     }
 
-    ~MainWindow() {
-        // Add any necessary cleanup
-    }
+    ~main_window() {}
 
 private:
-    QLabel *imageLabel;
-    QPushButton *uploadButton;
-    QPushButton *classifyButton;
-    KNN knn;
-    cv::Mat currentImage;
+    QLabel *image_label_;
+    QPushButton *upload_button_;
+    QPushButton *classify_button_;
+    knn knn_;
+    cv::Mat current_image_;
 
-    void setupUI() {
+    void setup_ui() {
         QVBoxLayout *layout = new QVBoxLayout(this);
 
-        imageLabel = new QLabel("Image will appear here");
-        imageLabel->setAlignment(Qt::AlignCenter);
-        layout->addWidget(imageLabel);
+        image_label_ = new QLabel("Image will appear here");
+        image_label_->setAlignment(Qt::AlignCenter);
+        layout->addWidget(image_label_);
 
-        uploadButton = new QPushButton("Upload Image");
-        connect(uploadButton, &QPushButton::clicked, this, &MainWindow::uploadImage); // Corrected method name
-        layout->addWidget(uploadButton);
+        upload_button_ = new QPushButton("Upload Image");
+        connect(upload_button_, &QPushButton::clicked, this, &main_window::upload_image);
+        layout->addWidget(upload_button_);
 
-        classifyButton = new QPushButton("Classify");
-        connect(classifyButton, &QPushButton::clicked, this, &MainWindow::classifyImage); // Corrected method name
-        layout->addWidget(classifyButton);
+        classify_button_ = new QPushButton("Classify");
+        connect(classify_button_, &QPushButton::clicked, this, &main_window::classify_image);
+        layout->addWidget(classify_button_);
 
         setLayout(layout);
         resize(800, 600);
     }
 
-    void uploadImage() {
-        QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.bmp *.png *.jpg *.jpeg)");
-        if (!fileName.isEmpty()) {
-            currentImage = cv::imread(fileName.toStdString(), cv::IMREAD_GRAYSCALE);
-            if (!currentImage.empty()) {
-                QImage qimg(currentImage.data, currentImage.cols, currentImage.rows, currentImage.step, QImage::Format_Grayscale8);
-                imageLabel->setPixmap(QPixmap::fromImage(qimg).scaled(imageLabel->size(), Qt::KeepAspectRatio));
+    void upload_image() {
+        QString file_name = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.bmp *.png *.jpg *.jpeg)");
+        if (!file_name.isEmpty()) {
+            current_image_ = cv::imread(file_name.toStdString(), cv::IMREAD_GRAYSCALE);
+            if (!current_image_.empty()) {
+                QImage qimg(current_image_.data, current_image_.cols, current_image_.rows, current_image_.step, QImage::Format_Grayscale8);
+                image_label_->setPixmap(QPixmap::fromImage(qimg).scaled(image_label_->size(), Qt::KeepAspectRatio));
             } else {
                 QMessageBox::warning(this, "Error", "Could not load the image.");
             }
         }
     }
 
-    void classifyImage() {
-        if (currentImage.empty()) {
+    void classify_image() {
+        if (current_image_.empty()) {
             QMessageBox::warning(this, "Warning", "Please upload an image first.");
             return;
         }
 
-        int label = knn.predict(currentImage);
+        int label = knn_.predict(current_image_);
         QMessageBox::information(this, "Classification Result", QString("The image has been classified as class: %1").arg(label));
     }
 };
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    MainWindow window;
+    main_window window;
     window.show();
     return app.exec();
 }

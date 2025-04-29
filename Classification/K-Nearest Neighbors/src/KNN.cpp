@@ -1,86 +1,77 @@
-#include "KNN.h"
+#include "knn.h"
 #include <limits>
 #include <algorithm>
 #include <numeric>
 
-// Constructor: Initializes KNN with specified parameters
-KNN::KNN(int k, DistanceMetric metric, NormalizationType normType)
-    : k(k), metric(metric), normType(normType), loggingEnabled(false) {}
+knn::knn(int k, distance_metric metric, normalization_type norm_type)
+    : k_(k), metric_(metric), norm_type_(norm_type), logging_enabled_(false) {}
 
-// Trains the KNN model with given training images and labels
-void KNN::train(const std::vector<cv::Mat>& images, const std::vector<int>& labels) {
-    trainImages = images;
-    trainLabels = labels;
-    
-    logMessage("Training completed with " + std::to_string(images.size()) + " images.");
+void knn::train(const std::vector<cv::Mat>& images, const std::vector<int>& labels) {
+    train_images_ = images;
+    train_labels_ = labels;
+    log_message("Training completed with " + std::to_string(images.size()) + " images.");
 }
 
-// Predicts the class label for a given test image
-int KNN::predict(const cv::Mat& image) {
+int knn::predict(const cv::Mat& image) {
     std::vector<std::pair<double, int>> distances;
-    Eigen::VectorXd queryFeatures = extractFeatures(image);
+    Eigen::VectorXd query_features = extract_features(image);
 
-    for (size_t i = 0; i < trainImages.size(); i++) {
-        Eigen::VectorXd trainFeatures = extractFeatures(trainImages[i]);
-        double dist = calculateDistance(trainFeatures, queryFeatures);
-        distances.emplace_back(dist, trainLabels[i]);
+    for (size_t i = 0; i < train_images_.size(); i++) {
+        Eigen::VectorXd train_features = extract_features(train_images_[i]);
+        double dist = calculate_distance(train_features, query_features);
+        distances.emplace_back(dist, train_labels_[i]);
     }
 
     std::sort(distances.begin(), distances.end());
 
-    std::vector<int> kVotes(k);
-    for (int i = 0; i < k; ++i) {
-        kVotes[i] = distances[i].second;
+    std::vector<int> k_votes(k_);
+    for (int i = 0; i < k_; ++i) {
+        k_votes[i] = distances[i].second;
     }
 
-    std::sort(kVotes.begin(), kVotes.end());
-    int mostCommon = kVotes[0], maxCount = 1, currentCount = 1;
-    for (int i = 1; i < k; ++i) {
-        if (kVotes[i] == kVotes[i - 1]) {
-            currentCount++;
-            if (currentCount > maxCount) {
-                maxCount = currentCount;
-                mostCommon = kVotes[i];
+    std::sort(k_votes.begin(), k_votes.end());
+    int most_common = k_votes[0], max_count = 1, current_count = 1;
+    for (int i = 1; i < k_; ++i) {
+        if (k_votes[i] == k_votes[i - 1]) {
+            current_count++;
+            if (current_count > max_count) {
+                max_count = current_count;
+                most_common = k_votes[i];
             }
         } else {
-            currentCount = 1;
+            current_count = 1;
         }
     }
 
-    logMessage("Predicted class: " + std::to_string(mostCommon));
-    return mostCommon;
+    log_message("Predicted class: " + std::to_string(most_common));
+    return most_common;
 }
 
-// Sets the distance metric to be used for predictions
-void KNN::setDistanceMetric(DistanceMetric metric) {
-    this->metric = metric;
-    logMessage("Distance metric set.");
+void knn::set_distance_metric(distance_metric metric) {
+    metric_ = metric;
+    log_message("Distance metric set.");
 }
 
-// Sets the normalization type for feature extraction
-void KNN::setNormalizationType(NormalizationType normType) {
-    this->normType = normType;
-    logMessage("Normalization type set.");
+void knn::set_normalization_type(normalization_type norm_type) {
+    norm_type_ = norm_type;
+    log_message("Normalization type set.");
 }
 
-// Enables or disables logging for the KNN class
-void KNN::setLogging(bool enableLogging) {
-    loggingEnabled = enableLogging;
+void knn::set_logging(bool enable_logging) {
+    logging_enabled_ = enable_logging;
 }
 
-// Logs a message if logging is enabled
-void KNN::logMessage(const std::string& message) {
-    if (loggingEnabled) {
+void knn::log_message(const std::string& message) {
+    if (logging_enabled_) {
         std::cout << "[KNN Log]: " << message << std::endl;
     }
 }
 
-// Displays a summary of the current KNN model's configuration
-void KNN::displaySummary() {
+void knn::display_summary() {
     std::cout << "KNN Model Summary:" << std::endl;
-    std::cout << "K value: " << k << std::endl;
+    std::cout << "K value: " << k_ << std::endl;
     std::cout << "Distance Metric: ";
-    switch (metric) {
+    switch (metric_) {
         case EUCLIDEAN: std::cout << "Euclidean"; break;
         case MANHATTAN: std::cout << "Manhattan"; break;
         case COSINE: std::cout << "Cosine"; break;
@@ -89,18 +80,17 @@ void KNN::displaySummary() {
     std::cout << std::endl;
 
     std::cout << "Normalization Type: ";
-    switch (normType) {
+    switch (norm_type_) {
         case NONE: std::cout << "None"; break;
         case MIN_MAX: std::cout << "Min-Max"; break;
         case Z_SCORE: std::cout << "Z-Score"; break;
     }
     std::cout << std::endl;
-    std::cout << "Number of training samples: " << trainImages.size() << std::endl;
+    std::cout << "Number of training samples: " << train_images_.size() << std::endl;
 }
 
-// Calculates the distance between two feature vectors using the selected metric
-double KNN::calculateDistance(const Eigen::VectorXd& a, const Eigen::VectorXd& b) {
-    switch (metric) {
+double knn::calculate_distance(const Eigen::VectorXd& a, const Eigen::VectorXd& b) {
+    switch (metric_) {
         case EUCLIDEAN:
             return (a - b).norm();
         case MANHATTAN:
@@ -114,9 +104,8 @@ double KNN::calculateDistance(const Eigen::VectorXd& a, const Eigen::VectorXd& b
     }
 }
 
-// Extracts features from an image, normalizes them if required
-Eigen::VectorXd KNN::extractFeatures(const cv::Mat& image) {
-    cv::Mat resized = resizeImage(image, cv::Size(32, 32));
+Eigen::VectorXd knn::extract_features(const cv::Mat& image) {
+    cv::Mat resized = resize_image(image, cv::Size(32, 32));
     Eigen::VectorXd features(resized.rows * resized.cols);
 
     for (int i = 0; i < resized.rows; ++i) {
@@ -125,52 +114,47 @@ Eigen::VectorXd KNN::extractFeatures(const cv::Mat& image) {
         }
     }
 
-    return normalizeFeatures(features);
+    return normalize_features(features);
 }
 
-// Normalizes the features using the selected normalization method
-Eigen::VectorXd KNN::normalizeFeatures(const Eigen::VectorXd& features) {
-    if (normType == NONE) {
+Eigen::VectorXd knn::normalize_features(const Eigen::VectorXd& features) {
+    if (norm_type_ == NONE) {
         return features;
-    } else if (normType == MIN_MAX) {
-        double minVal = features.minCoeff();
-        double maxVal = features.maxCoeff();
-        return (features.array() - minVal) / (maxVal - minVal);
-    } else if (normType == Z_SCORE) {
+    } else if (norm_type_ == MIN_MAX) {
+        double min_val = features.minCoeff();
+        double max_val = features.maxCoeff();
+        return (features.array() - min_val) / (max_val - min_val);
+    } else if (norm_type_ == Z_SCORE) {
         Eigen::VectorXd mean, stddev;
-        calculateNormalizationStats({features}, mean, stddev);
+        calculate_normalization_stats({features}, mean, stddev);
         return (features.array() - mean.array()) / stddev.array();
     } else {
         throw std::invalid_argument("Unknown normalization type.");
     }
 }
 
-// Resizes an image to a specified size
-cv::Mat KNN::resizeImage(const cv::Mat& image, const cv::Size& size) {
+cv::Mat knn::resize_image(const cv::Mat& image, const cv::Size& size) {
     cv::Mat resized;
     cv::resize(image, resized, size);
     return resized;
 }
 
-// Calculates mean and standard deviation for Z-score normalization
-void KNN::calculateNormalizationStats(const std::vector<Eigen::VectorXd>& featureVectors,
-                                      Eigen::VectorXd& mean,
-                                      Eigen::VectorXd& stddev) {
-    if (featureVectors.empty()) return;
+void knn::calculate_normalization_stats(const std::vector<Eigen::VectorXd>& feature_vectors,
+                                       Eigen::VectorXd& mean,
+                                       Eigen::VectorXd& stddev) {
+    if (feature_vectors.empty()) return;
 
-    int numFeatures = featureVectors[0].size();
-    mean = Eigen::VectorXd::Zero(numFeatures);
-    stddev = Eigen::VectorXd::Zero(numFeatures);
+    int num_features = feature_vectors[0].size();
+    mean = Eigen::VectorXd::Zero(num_features);
+    stddev = Eigen::VectorXd::Zero(num_features);
 
-    // Mean
-    for (const auto& vec : featureVectors) {
+    for (const auto& vec : feature_vectors) {
         mean += vec;
     }
-    mean /= static_cast<double>(featureVectors.size());
+    mean /= static_cast<double>(feature_vectors.size());
 
-    // Standard deviation
-    for (const auto& vec : featureVectors) {
+    for (const auto& vec : feature_vectors) {
         stddev += (vec - mean).cwiseAbs2();
     }
-    stddev = (stddev / static_cast<double>(featureVectors.size())).cwiseSqrt();
+    stddev = (stddev / static_cast<double>(feature_vectors.size())).cwiseSqrt();
 }
