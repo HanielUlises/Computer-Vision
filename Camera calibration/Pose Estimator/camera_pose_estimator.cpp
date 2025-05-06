@@ -1,7 +1,5 @@
 #include "camera_pose_estimator.hpp"
 #include <opencv2/calib3d.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
 #include <ranges>
 #include <numeric>
 
@@ -67,12 +65,7 @@ std::vector<cv::Point2d> camera_pose_estimator::project_points(
     }
     cv::Mat dist_coeffs = cv::Mat(distortion_coeffs, true);
     std::vector<cv::Point2d> projected_points;
-    cv::projectPoints(world_points, rvec, tvec, camera_matrix_cv,
-                     dist Reprojection error: {result.reprojection_error:.4f}\n");
-        }
-    } catch (const std::exception& e) {
-        std::cerr << "error: " << e.what() << "\n";
-        return 1;
-    }
-    return 0;
+    cv::projectPoints(world_points, rvec, tvec, camera_matrix_cv, dist_coeffs, projected_points);
+    return projected_points;
 }
+} // namespace camera_pose_estimation
