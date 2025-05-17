@@ -1,128 +1,118 @@
-#include "KMeans.hpp"
-#include <opencv2/opencv.hpp>
-#include <Eigen/Dense>
-#include <iostream>
-#include <vector>
+#include "kmeans.hpp"
+#include <random>
 #include <limits>
+#include <iostream>
 
-template <typename T>
-KMeans<T>::KMeans(int k, int max_iter, double tol)
+KMeans::KMeans(int k, int max_iter, double tol)
     : k_(k), max_iter_(max_iter), tol_(tol) {}
 
-template <typename T>
-void KMeans<T>::fit(const std::vector<cv::Mat>& descriptors) {
-    std::vector<Eigen::VectorXd> dataPoints;
+// Convert set of OpenCV descriptor matrices to Eigen vectors
+std::vector<Eigen::VectorXd> KMeans::convert_to_vectors(const std::vector<cv::Mat>& descriptors) {
+    std::vector<Eigen::VectorXd> data_points;
     for (const auto& desc : descriptors) {
         for (int i = 0; i < desc.rows; ++i) {
             Eigen::VectorXd point(desc.cols);
             for (int j = 0; j < desc.cols; ++j) {
-                point(j) = desc.at<float>(i, j);
+                point(j) = static_cast<double>(desc.at<float>(i, j));
             }
-            dataPoints.push_back(point);
+            data_points.push_back(point);
         }
     }
+    return data_points;
+}
 
-    // Initialize centroids randomly from the data points
-    centroids_ = Eigen::MatrixXd(k_, dataPoints[0].size());
+// Lloyd's algorithm for k-means clustering
+void KMeans::fit(const std::vector<cv::Mat>& descriptors) {
+    auto data_points = convert_to_vectors(descriptors);
+    int d = data_points[0].size(); // dimension of input vectors
+
+    // Initialize centroids by sampling k points uniformly at random
+    centroids_ = Eigen::MatrixXd(k_, d);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0, static_cast<int>(data_points.size() - 1));
     for (int i = 0; i < k_; ++i) {
-        centroids_.row(i) = dataPoints[rand() % dataPoints.size()].transpose();
+        centroids_.row(i) = data_points[distrib(gen)].transpose();
     }
 
-    std::vector<int> labels(dataPoints.size(), -1);
+    std::vector<int> labels(data_points.size(), -1);
     bool converged = false;
     int iter = 0;
 
     while (!converged && iter < max_iter_) {
-        std::vector<int> newLabels(dataPoints.size());
+        std::vector<int> new_labels(data_points.size());
         converged = true;
 
-        // Step 1: Assign each point to the nearest centroid
-        for (size_t i = 0; i < dataPoints.size(); ++i) {
-            int closestCentroid = -1;
-            double minDist = std::numeric_limits<double>::max();
+        // Assignment step: for each xᵢ, find argmin_j ||xᵢ - μⱼ||
+        for (size_t i = 0; i < data_points.size(); ++i) {
+            double min_dist = std::numeric_limits<double>::max();
+            int best_j = -1;
             for (int j = 0; j < k_; ++j) {
-                double dist = compute_distance(dataPoints[i], centroids_.row(j).transpose());
-                if (dist < minDist) {
-                    minDist = dist;
-                    closestCentroid = j;
+                double dist = compute_distance(data_points[i], centroids_.row(j).transpose());
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    best_j = j;
                 }
             }
-            newLabels[i] = closestCentroid;
-            if (newLabels[i] != labels[i]) {
+            new_labels[i] = best_j;
+            if (new_labels[i] != labels[i]) {
                 converged = false;
             }
         }
 
-        // Step 2: Update centroids
-        update_centroids(descriptors, newLabels);
-        labels = newLabels;
+        // Update step: μⱼ ← (1 / |Cⱼ|) Σ_{xᵢ ∈ Cⱼ} xᵢ
+        update_centroids(data_points, new_labels);
+        labels = new_labels;
         ++iter;
     }
 }
 
-template <typename T>
-std::vector<int> KMeans<T>::predict(const std::vector<cv::Mat>& descriptors) {
+// Predict the nearest cluster index for each point
+std::vector<int> KMeans::predict(const std::vector<cv::Mat>& descriptors) {
+    auto data_points = convert_to_vectors(descriptors);
     std::vector<int> predictions;
-    std::vector<Eigen::VectorXd> dataPoints;
-    
-    // Convert descriptors to Eigen matrix form
-    for (const auto& desc : descriptors) {
-        for (int i = 0; i < desc.rows; ++i) {
-            Eigen::VectorXd point(desc.cols);
-            for (int j = 0; j < desc.cols; ++j) {
-                point(j) = desc.at<float>(i, j);
-            }
-            dataPoints.push_back(point);
-        }
-    }
 
-    // Assign points to nearest centroid
-    for (const auto& point : dataPoints) {
-        int closestCentroid = -1;
-        double minDist = std::numeric_limits<double>::max();
-        for (int i = 0; i < k_; ++i) {
-            double dist = compute_distance(point, centroids_.row(i).transpose());
-            if (dist < minDist) {
-                minDist = dist;
-                closestCentroid = i;
+    for (const auto& point : data_points) {
+        double min_dist = std::numeric_limits<double>::max();
+        int best_j = -1;
+        for (int j = 0; j < k_; ++j) {
+            double dist = compute_distance(point, centroids_.row(j).transpose());
+            if (dist < min_dist) {
+                min_dist = dist;
+                best_j = j;
             }
         }
-        predictions.push_back(closestCentroid);
+        predictions.push_back(best_j);
     }
 
     return predictions;
 }
 
-template <typename T>
-Eigen::MatrixXd KMeans<T>::get_centroids() const {
+// Returns centroid matrix μ ∈ ℝ^{k × d}
+Eigen::MatrixXd KMeans::get_centroids() const {
     return centroids_;
 }
 
-template <typename T>
-double KMeans<T>::compute_distance(const Eigen::VectorXd& a, const Eigen::VectorXd& b) {
+// Euclidean norm: ‖a - b‖₂
+double KMeans::compute_distance(const Eigen::VectorXd& a, const Eigen::VectorXd& b) {
     return (a - b).norm();
 }
 
-template <typename T>
-void KMeans<T>::update_centroids(const std::vector<cv::Mat>& descriptors, const std::vector<int>& labels) {
-    std::vector<Eigen::VectorXd> newCentroids(k_, Eigen::VectorXd(descriptors[0].cols));
+// μⱼ ← mean of points assigned to cluster j
+void KMeans::update_centroids(const std::vector<Eigen::VectorXd>& points, const std::vector<int>& labels) {
+    int d = points[0].size();
+    std::vector<Eigen::VectorXd> sums(k_, Eigen::VectorXd::Zero(d));
     std::vector<int> counts(k_, 0);
 
-    // Accumulate points for each centroid
-    for (size_t i = 0; i < descriptors.size(); ++i) {
-        Eigen::VectorXd point(descriptors[i].cols);
-        for (int j = 0; j < descriptors[i].cols; ++j) {
-            point(j) = descriptors[i].at<float>(i, j);
-        }
-        newCentroids[labels[i]] += point;
-        counts[labels[i]]++;
+    for (size_t i = 0; i < points.size(); ++i) {
+        int label = labels[i];
+        sums[label] += points[i];
+        counts[label]++;
     }
 
-    // Compute the mean of points assigned to each centroid
-    for (int i = 0; i < k_; ++i) {
-        if (counts[i] > 0) {
-            newCentroids[i] /= counts[i];
+    for (int j = 0; j < k_; ++j) {
+        if (counts[j] > 0) {
+            centroids_.row(j) = (sums[j] / counts[j]).transpose();
         }
-        centroids_.row(i) = newCentroids[i].transpose();
     }
 }
