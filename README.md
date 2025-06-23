@@ -1,4 +1,4 @@
-# Computer Vision: Image Processing Techniques
+# Computer Vision and Image Processing Techniques (but mainly computer vision)
 
 This project serves as a comprehensive exploration of image processing and computer vision techniques, implemented using the **OpenCV C++ library**. It aims to provide practical insights into fundamental and advanced algorithms for solving real-world vision problems.
 
