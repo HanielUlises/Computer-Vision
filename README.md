@@ -7,4 +7,4 @@ This project serves as a comprehensive exploration of image processing and compu
 - **Computer Vision**: Implementing algorithms for feature detection, object recognition, and scene understanding.
 
 ## Reference
-This project draws heavily on concepts and techniques from *Computer Vision: Algorithms and Applications* by Richard Szeliski, a foundational resource for understanding the theoretical and practical aspects of computer vision.
+This project draws heavily on concepts and techniques from *Computer Vision: Algorithms and Applications* by Richard Szeliski, a foundational resource for understanding the theoretical and practical aspects of computer vision. (as well as few MOOCs out there)
