@@ -1,0 +1,3 @@
+[submodule "Projects/Exploratory-B/GCN-GrabCut"]
+	path = Projects/Exploratory-B/GCN-GrabCut
+	url = https://github.com/HanielUlises/GCN-GrabCut
