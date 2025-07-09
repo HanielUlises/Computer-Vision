@@ -6,16 +6,25 @@ This repository is an ongoing and layered exploration of **image processing** an
 
 This repository serves two complementary purposes:
 
-1. **Pedagogical Clarity**: Many of the implementations are didactic in nature, focusing on core techniques and algorithms from image processing and computer vision. These are written with attention to readability and correctness, emphasizing clarity over optimization when appropriate.
+1. **Pedagogical Clarity**: Many of the implementations are didactic in nature, focusing on core techniques and algorithms from image processing and computer vision. These examples aim to be both instructive and cleanly implemented, emphasizing correctness and readability over premature optimization.
 
-2. **Project-Based Inquiry**: Alongside the instructional examples, the repository includes projects with a more integrative or experimental character. Some of these are theoretically informed; others are more speculative or exploratory (so far I've been exploring things related with graph convolutional neural networks and grabcut algorithm, for instance) developed in response to personal interests, questions, or curiosities.
+2. **Project-Based Inquiry**: Alongside the foundational examples, the repository includes a variety of projects — some of which are theoretically informed and others more experimental. These projects fall into two broad categories:
+    - **Exploratory Projects (Core curiosity. Familiar Territory)**: Projects that align with ongoing areas of interest or that build upon concepts I've previously studied or engaged with. These tend to focus on refining ideas, testing variations, or developing deeper intuitions through implementation.
 
-The broader intent is to use this space as a flexible environment for learning, prototyping, and deepening intuition—both about computer vision as a field, and about **scientific computing with modern C++** more broadly.
+   - **Exploratory Projects (Risky or Outside Expertise)**: Projects in this category push beyond my current expertise. They often begin from conceptual uncertainty and evolve through iterative understanding. These are built with the goal of learning-by-building — attempting to internalize unfamiliar ideas by working with them directly.
+
+The broader intent is to use this space as a flexible environment for **learning, prototyping, and thinking critically about the structure of visual algorithms**, while also extending toward **scientific computing with modern C++** as a foundational methodology.
 
 ## Theoretical and Practical Considerations
 
-Many of the techniques and ideas here are grounded in **academic references** (notably *Computer Vision: Algorithms and Applications* by Richard Szeliski) as well as high-quality **MOOCs** and related online materials. This foundation continues to evolve as the repository grows, and further references will be indexed accordingly.
+The content in this repository draws from a range of academic and practical resources, including:
+
+- *Computer Vision: Algorithms and Applications* by Richard Szeliski
+- Select **MOOCs**, academic courses, and online materials in the fields of computer vision and scientific programming
+- Ongoing engagement with relevant literature and research topics
+
+As the repository matures, additional references will be integrated and annotated where appropriate.
 
 ---
 
-<sub>**Note:** Some of the more "risky" or highly exploratory projects are hosted elsewhere in my GitHub profile. I intend to index or reference them from within this repository over time, once an appropriate structure has been defined.</sub>
+<sub>**Note:** Some of the more “risky” or conceptually ambitious projects are hosted elsewhere on my GitHub profile. I plan to cross-reference them within this repository once I define a suitable indexing scheme or internal structure.</sub>
