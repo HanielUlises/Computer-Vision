@@ -1,3 +1,0 @@
-/home/haniel/Projects/C++/Computer-Vision/Image Processing/GPU/build/CMakeFiles/cuda_test.dir
-/home/haniel/Projects/C++/Computer-Vision/Image Processing/GPU/build/CMakeFiles/edit_cache.dir
-/home/haniel/Projects/C++/Computer-Vision/Image Processing/GPU/build/CMakeFiles/rebuild_cache.dir
