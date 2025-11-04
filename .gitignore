@@ -31,4 +31,75 @@
 *.out
 *.app
 
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CMakeScripts/
+Makefile
+*.cmake
+install_manifest.txt
+CTestTestfile.cmake
+DartConfiguration.tcl
+Testing/
+*.dir/
+
+# Build directories (common names)
+build/
+bin/
+obj/
+out/
+debug/
+release/
+x64/
+x86/
+win32/
+win64/
+
+# IDE / Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.tmproj
+*.sublime-project
+*.sublime-workspace
+
+# Dependency directories
+deps/
+external/
+
+# Generated data files (from your input)
 *.dat
+
+# Other common generated files
+*.log
+*.tmp
+*.bak
+*.cache
+*.pdb
+*.ilk
+*.manifest
+*.res
+*.pch
+*.tlog
+*.lastbuildstate
+*.unsuccessfulbuild
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python (if applicable)
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
