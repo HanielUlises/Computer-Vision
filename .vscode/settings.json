@@ -96,7 +96,8 @@
     "span": "cpp",
     "dense": "cpp",
     "geometry": "cpp",
-    "eigenvalues": "cpp"
+    "eigenvalues": "cpp",
+    "typeindex": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled",
   "C_Cpp.intelliSenseEngine": "clang",
