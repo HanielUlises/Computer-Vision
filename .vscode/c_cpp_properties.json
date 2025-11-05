@@ -1,22 +1,32 @@
 {
   "configurations": [
     {
-      "name": "linux-gcc-x64",
+      "name": "Linux-GCC-x64",
       "includePath": [
         "${workspaceFolder}/**",
+        "/usr/local/include/opencv4",
+        "/usr/local/cuda/include",
         "/usr/include",
         "/usr/local/include",
         "/usr/include/c++/11",
         "/usr/include/x86_64-linux-gnu/c++/11",
-        "/usr/local/include/opencv4"
+        "/usr/include/eigen3"
       ],
-      "compilerPath": "/usr/bin/gcc",
+      "defines": [
+        "__CUDA_ARCH__=860",
+        "USE_CUDA"
+      ],
+      "compilerPath": "/usr/bin/g++-11",
       "cStandard": "c17",
-      "cppStandard": "c++20",
+      "cppStandard": "c++23",
       "intelliSenseMode": "linux-gcc-x64",
-      "compilerArgs": [
-        "-I/usr/local/include/opencv4"
-      ]
+      "browse": {
+        "path": [
+          "/usr/local/include/opencv4",
+          "/usr/local/cuda/include"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
     }
   ],
   "version": 4
