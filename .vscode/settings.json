@@ -93,7 +93,10 @@
     "__nullptr": "cpp",
     "queue": "cpp",
     "stack": "cpp",
-    "span": "cpp"
+    "span": "cpp",
+    "dense": "cpp",
+    "geometry": "cpp",
+    "eigenvalues": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled",
   "C_Cpp.intelliSenseEngine": "clang",
