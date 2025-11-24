@@ -1,105 +1,85 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
+# General C/C++
 *.o
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
+*.lo
+*.la
+*.al
+*.libs
 *.so
+*.so.*
 *.dylib
 *.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
 *.exe
 *.out
 *.app
+*.a
+*.lib
+*.exp
+*.pdb
+*.idb
+*.d
 
-# CMake generated files
+# Build directories
+build/
+build-*/
+Build/
+Build-*/
+cmake-build-*/
+[Cc]make-[Bb]uild*/
+[Dd]ebug/
+[Rr]elease/
+
+# CMake
 CMakeCache.txt
 CMakeFiles/
-cmake_install.cmake
 CMakeScripts/
-Makefile
-*.cmake
-install_manifest.txt
+cmake_install.cmake
 CTestTestfile.cmake
-DartConfiguration.tcl
-Testing/
-*.dir/
+CPackConfig.cmake
+CPackSourceConfig.cmake
+Makefile
+install_manifest.txt
+compile_commands.json
+CMakeUserPresets.json
+.ninja_deps
+.ninja_log
+build.ninja
 
-# Build directories (common names)
-build/
-bin/
-obj/
-out/
-debug/
-release/
-x64/
-x86/
-win32/
-win64/
+# CUDA
+*.cubin
+*.fatbin
+*.ptx
+*.sass
+*.gpu
+*.cu.d
+*.cudafe*
+*.module_id
+*.nvlinkinfo
+nsight-systems-report*
+nsight-compute-report*
 
-# IDE / Editor files
-.idea/
+# OpenCV
+*.xml
+*.bin
+*.prototxt
+*.onnx
+
+# IDE
 .vscode/
-*.swp
-*.swo
-*~
-.project
-.classpath
-.settings/
-*.tmproj
-*.sublime-project
-*.sublime-workspace
-
-# Dependency directories
-deps/
-external/
-
-# Generated data files (from your input)
-*.dat
-
-# Other common generated files
-*.log
-*.tmp
-*.bak
+.idea/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.user
+*.suo
 *.cache
-*.pdb
-*.ilk
-*.manifest
-*.res
-*.pch
-*.tlog
-*.lastbuildstate
-*.unsuccessfulbuild
+*.ipch
+*.aps
+*.ncb
 
-# macOS
+# OS
 .DS_Store
-
-# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Python (if applicable)
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
+*.swp
+*~

@@ -1,4 +1,0 @@
-/home/haniel/Projects/Computer-Vision/Image Processing/App/build/CMakeFiles/ImageViewer.dir
-/home/haniel/Projects/Computer-Vision/Image Processing/App/build/CMakeFiles/edit_cache.dir
-/home/haniel/Projects/Computer-Vision/Image Processing/App/build/CMakeFiles/rebuild_cache.dir
-/home/haniel/Projects/Computer-Vision/Image Processing/App/build/CMakeFiles/ImageViewer_autogen.dir
