@@ -4,26 +4,58 @@
       "name": "Linux-GCC-x64",
       "includePath": [
         "${workspaceFolder}/**",
+
+        // --- Existing include paths ---
         "/usr/local/include/opencv4",
         "/usr/local/cuda/include",
         "/usr/include",
         "/usr/local/include",
         "/usr/include/c++/11",
         "/usr/include/x86_64-linux-gnu/c++/11",
-        "/usr/include/eigen3"
+        "/usr/include/eigen3",
+
+        "/usr/include/x86_64-linux-gnu/qt6",
+        "/usr/include/x86_64-linux-gnu/qt6/QtCore",
+        "/usr/include/x86_64-linux-gnu/qt6/QtGui",
+        "/usr/include/x86_64-linux-gnu/qt6/QtWidgets",
+        "/usr/include/x86_64-linux-gnu/qt6/QtQuick",
+        "/usr/include/x86_64-linux-gnu/qt6/QtQml",
+        "/usr/include/x86_64-linux-gnu/qt6/QtQmlModels",
+        "/usr/include/x86_64-linux-gnu/qt6/QtQmlWorkerScript",
+        "/usr/include/x86_64-linux-gnu/qt6/QtQuickControls2",
+        "/usr/include/x86_64-linux-gnu/qt6/QtOpenGL",
+        "/usr/include/x86_64-linux-gnu/qt6/QtNetwork",
+
+        "/usr/include/x86_64-linux-gnu/qt5",
+        "/usr/include/x86_64-linux-gnu/qt5/QtCore",
+        "/usr/include/x86_64-linux-gnu/qt5/QtGui",
+        "/usr/include/x86_64-linux-gnu/qt5/QtWidgets",
+        "/usr/include/x86_64-linux-gnu/qt5/QtQuick",
+        "/usr/include/x86_64-linux-gnu/qt5/QtQml"
       ],
+
       "defines": [
         "__CUDA_ARCH__=860",
-        "USE_CUDA"
+        "USE_CUDA",
+
+        "QT_CORE_LIB",
+        "QT_GUI_LIB",
+        "QT_WIDGETS_LIB",
+        "QT_QML_LIB",
+        "QT_QUICK_LIB"
       ],
+
       "compilerPath": "/usr/bin/g++-11",
       "cStandard": "c17",
       "cppStandard": "c++23",
       "intelliSenseMode": "linux-gcc-x64",
+
       "browse": {
         "path": [
           "/usr/local/include/opencv4",
-          "/usr/local/cuda/include"
+          "/usr/local/cuda/include",
+          "/usr/include/x86_64-linux-gnu/qt6",
+          "/usr/include/x86_64-linux-gnu/qt5"
         ],
         "limitSymbolsToIncludedHeaders": true
       }
