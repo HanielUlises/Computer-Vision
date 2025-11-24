@@ -4,8 +4,6 @@
       "name": "Linux-GCC-x64",
       "includePath": [
         "${workspaceFolder}/**",
-
-        // --- Existing include paths ---
         "/usr/local/include/opencv4",
         "/usr/local/cuda/include",
         "/usr/include",
