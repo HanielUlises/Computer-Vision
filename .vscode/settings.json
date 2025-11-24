@@ -97,7 +97,8 @@
     "dense": "cpp",
     "geometry": "cpp",
     "eigenvalues": "cpp",
-    "typeindex": "cpp"
+    "typeindex": "cpp",
+    "qquickpainteditem": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled",
   "C_Cpp.intelliSenseEngine": "clang",
