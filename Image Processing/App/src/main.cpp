@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
     qRegisterMetaType<Frame>("Frame");
+    qRegisterMetaType<cv::Mat>("Mat");
     qmlRegisterType<Frame>("com.app.frame", 1, 0, "Frame");
 
     Thread_Manager* video_thread = new Thread_Manager(&app);
