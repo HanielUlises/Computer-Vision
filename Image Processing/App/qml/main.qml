@@ -11,6 +11,6 @@ Window{
     StackView{
         id: loader
         anchors.fill: parent
-        initialItem: "qrc:/home.qml"
+        initialItem: "qrc:/qml/home.qml"
     }
 }

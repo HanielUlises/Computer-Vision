@@ -23,7 +23,7 @@ Page{
         anchors.top: bar.bottom
         anchors.topMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: loader.push("qrc:/showImage.qml")
+        onClicked: loader.push("qrc:/qml/showImage.qml")
     }
 
     Button{
@@ -31,6 +31,6 @@ Page{
         anchors.top: imageButton.bottom
         anchors.topMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: loader.push("qrc:/showVideo.qml")
+        onClicked: loader.push("qrc:/qml/showVideo.qml")
     }
 }
