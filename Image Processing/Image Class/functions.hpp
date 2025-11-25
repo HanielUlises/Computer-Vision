@@ -1,7 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTION_H
 
-#include "image.h"
+#include "image.hpp"
 
 #include <iostream>
 #include <cstdlib>
