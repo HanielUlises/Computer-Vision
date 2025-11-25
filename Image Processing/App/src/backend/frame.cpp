@@ -64,7 +64,7 @@ void Frame::convert_to_QImage() {
     cv::cvtColor(raw_frame, temp_mat, cv::COLOR_BGR2RGB);
 
     QImage temp_image(
-        temp_mat.data,
+        static_cast<uchar*> (temp_mat.data),
         temp_mat.cols,
         temp_mat.rows,
         temp_mat.step,
@@ -75,4 +75,113 @@ void Frame::convert_to_QImage() {
 
     update();
     emit(frame_changed());
+}
+
+bool Frame::smooth_image() {
+    if(!raw_frame.empty()){
+        cv::Mat temp;
+        cv::GaussianBlur(raw_frame, temp, cv::Size(31, 31), 0, 0);
+        set_raw_frame(temp);
+        
+        return true;
+    }
+    
+    return false;
+}
+
+bool Frame::erode_image() {
+    if(!raw_frame.empty()){
+        cv::Mat temp;
+        temp = raw_frame;
+        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(6,6));
+        cv::erode(temp, temp, kernel);
+
+        set_raw_frame(temp);
+        
+        return true;
+    }
+    
+    return false;
+}
+
+bool Frame::dilate_image() {
+    if(!raw_frame.empty()){
+        cv::Mat temp;
+        temp = raw_frame;
+        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(6,6));
+        cv::dilate(temp, temp, kernel);
+
+        set_raw_frame(temp);
+        
+        return true;
+    }
+    
+    return false;
+}
+
+bool Frame::find_cotours(){
+    if(!raw_frame.empty()){
+        cv::Mat temp;
+        cv::cvtColor(raw_frame, temp, cv::COLOR_RGB2GRAY);
+        cv::Canny(temp, temp, 0, 150, 3);
+
+        std::vector<std::vector<cv::Point>> contours; 
+        std::vector<cv::Vec4i> hierarchy;
+        cv::findContours(temp, contours, hierarchy, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
+
+        cv::Mat drawing = cv::Mat::zeros(temp.size(), CV_8UC3);
+
+        for(size_t i = 0; i < contours.size(); i++) {
+            cv::Scalar color = cv::Scalar(256, 26, 150);
+            cv::drawContours(drawing, contours, static_cast<int>(i), color, 2, cv::LINE_8, hierarchy, 0);
+        }
+
+        set_raw_frame(drawing);
+
+        return true;
+    }
+    
+    return false;
+}
+
+bool Frame::find_horizontal_lines(){
+    if(!raw_frame.empty()){
+        cv::Mat temp;
+        cv::Mat binary;
+
+        cv::cvtColor(raw_frame, temp, cv::COLOR_BGR2GRAY);
+        cv::adaptiveThreshold(temp, binary, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 15, -2);
+
+        int structure_size = binary.cols/30;
+
+        cv::Mat horizontal_structure = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(structure_size, 1));
+        cv::erode(binary, binary, horizontal_structure, cv::Point(-1, -1));
+        cv::dilate(binary, binary, horizontal_structure, cv::Point(-1, -1));
+
+        set_raw_frame(binary);
+        return true;
+    }
+    
+    return false;
+} 
+
+bool Frame::find_vertical_lines(){
+    if(!raw_frame.empty()){
+        cv::Mat temp;
+        cv::Mat binary;
+
+        cv::cvtColor(raw_frame, temp, cv::COLOR_BGR2GRAY);
+        cv::adaptiveThreshold(temp, binary, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 15, -2);
+
+        int structure_size = binary.rows/30;
+
+        cv::Mat vertical_structure = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(1, structure_size));
+        cv::erode(binary, binary, vertical_structure, cv::Point(-1, -1));
+        cv::dilate(binary, binary, vertical_structure, cv::Point(-1, -1));
+
+        set_raw_frame(binary);
+        return true;
+    }
+    
+    return false;
 }
