@@ -98,7 +98,8 @@
     "geometry": "cpp",
     "eigenvalues": "cpp",
     "typeindex": "cpp",
-    "qquickpainteditem": "cpp"
+    "qquickpainteditem": "cpp",
+    "qpainter": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled",
   "C_Cpp.intelliSenseEngine": "clang",

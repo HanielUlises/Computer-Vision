@@ -12,11 +12,11 @@
 #include <opencv2/highgui.hpp>
 
 class Frame : public QQuickPaintedItem{
-    Q_OBJECT
-    Q_PROPERTY(QImage frame READ get_frame WRITE set_frame NOTIFY frame_changed)
+        Q_OBJECT
+        Q_PROPERTY(QImage frame READ get_frame WRITE set_frame NOTIFY frame_changed)
 
-    cv::Mat raw_frame;
-    QImage frame;
+        cv::Mat raw_frame;
+        QImage frame;
 
     public:
         Frame(QQuickPaintedItem *parent = 0);
