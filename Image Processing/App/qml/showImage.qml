@@ -21,60 +21,111 @@ Page {
     }
 
     ColumnLayout {
-        id: imageContainer
-        width: 640
-        height: 480
-
+        id: content_layout
         anchors.top: bar.bottom
-        anchors.topMargin: 20
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        spacing: 10
 
-        Image {
-            id: logo
-            source: "qrc:/qml/logo.png"
+        Item {
+            id: image_area
+            Layout.fillWidth: true
+            Layout.fillHeight: true
 
-            Layout.preferredWidth: 50
-            Layout.preferredHeight: 50
+            Image {
+                id: logo
+                source: "qrc:/qml/logo.png"
+                width: 40
+                height: 40
+                fillMode: Image.PreserveAspectFit
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: 8
+                anchors.topMargin: 8
+            }
 
-            sourceSize.width: 50
-            sourceSize.height: 50
-
-            fillMode: Image.PreserveAspectFit
-
-            anchors {
-                top: parent.top
-                left: parent.left
-                topMargin: 8
-                leftMargin: 8
+            Frame {
+                id: selectedImage
+                anchors.fill: parent
+                anchors.topMargin: 50
+                visible: false
             }
         }
 
+        RowLayout {
+            id: button_row
+            Layout.fillWidth: true
+            Layout.preferredHeight: 60
+            spacing: 20
 
-        Frame {
-            id: selectedImage
-            Layout.preferredWidth: imageContainer.width
-            Layout.preferredHeight: imageContainer.height
-            visible: false
-        }
-    }
+            Button {
+                text: "Open Image"
+                Layout.fillWidth: true
+                onClicked: imageDialog.open()
+            }
 
-    RowLayout {
-        anchors.top: imageContainer.bottom
-        anchors.topMargin: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: parent.width * 0.6
-        spacing: width * 0.2
+            Button {
+                text: "Smooth"
+                Layout.fillWidth: true
+                onClicked: {
+                    if(!selectedImage.smooth_image())
+                        errorAlert.open()
+                }
+            }
 
-        Button {
-            text: "Open Image"
-            Layout.preferredWidth: parent.width * 0.4
-            onClicked: imageDialog.open()
-        }
+            Button {
+                text: "Erode"
+                Layout.fillWidth: true
+                onClicked: {
+                    if(!selectedImage.erode_image())
+                        errorAlert.open()
+                }
+            }
 
-        Button {
-            text: "Go Back"
-            Layout.preferredWidth: parent.width * 0.4
-            onClicked: loader.pop()
+            Button {
+                text: "Dilate"
+                Layout.fillWidth: true
+                onClicked: {
+                    if(!selectedImage.dilate_image())
+                        errorAlert.open()
+                }
+            }
+
+            Button {
+                text: "Contours"
+                Layout.fillWidth: true
+                onClicked: {
+                    if(!selectedImage.find_cotours())
+                        errorAlert.open()
+                }
+            }
+
+            Button {
+                text: "Horizontal Lines"
+                Layout.fillWidth: true
+                onClicked: {
+                    if(!selectedImage.find_horizontal_lines())
+                        errorAlert.open()
+                }
+            }
+
+            Button {
+                text: "Vertical Lines"
+                Layout.fillWidth: true
+                onClicked: {
+                    if(!selectedImage.find_vertical_lines())
+                        errorAlert.open()
+                }
+            }
+
+            Button {
+                text: "Go Back"
+                Layout.fillWidth: true
+                onClicked: loader.pop()
+            }
+
+            
         }
     }
 
@@ -84,8 +135,16 @@ Page {
         selectExisting: true
         onAccepted: {
             selectedImage.open_image(imageDialog.fileUrl)
-            picture.visible = false
             selectedImage.visible = true
         }
+    }
+
+    Dialog {
+        id: errorAlert
+        title: "error"
+        Text {
+            text: "Please open an image"
+        }
+        standardButtons: StandardButton.Ok
     }
 }
