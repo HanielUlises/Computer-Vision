@@ -1,0 +1,9 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/home.qml</file>
+        <file>qml/showImage.qml</file>
+        <file>qml/showVideo.qml</file>
+    </qresource>
+</RCC>

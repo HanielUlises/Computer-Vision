@@ -18,10 +18,19 @@ Page{
     }
 
     Button{
+        id: imageButton
         text: "Show Image"
         anchors.top: bar.bottom
         anchors.topMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
         onClicked: loader.push("qrc:/showImage.qml")
+    }
+
+    Button{
+        text: "Show Video"
+        anchors.top: imageButton.bottom
+        anchors.topMargin: 20
+        anchors.horizontalCenter: parent.horizontalCenter
+        onClicked: loader.push("qrc:/showVideo.qml")
     }
 }
