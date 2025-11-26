@@ -40,6 +40,8 @@ class Frame : public QQuickPaintedItem{
         Q_INVOKABLE bool find_cotours();
         Q_INVOKABLE bool find_horizontal_lines();
         Q_INVOKABLE bool find_vertical_lines();
+        Q_INVOKABLE bool laplacian_filter();
+        Q_INVOKABLE bool apply_canny();
     signals:
         void frame_changed();
     
