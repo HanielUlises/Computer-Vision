@@ -185,3 +185,33 @@ bool Frame::find_vertical_lines(){
     
     return false;
 }
+
+bool Frame::laplacian_filter() {
+    if(!raw_frame.empty()){
+        cv::Mat temp;
+        cv::Mat dest;
+
+        cv::cvtColor(raw_frame, temp, cv::COLOR_BGR2GRAY);
+        cv::Laplacian(temp, dest, CV_16S, 3, 1, 0, cv::BORDER_DEFAULT);
+        cv::convertScaleAbs(dest, dest);
+
+        set_raw_frame(dest);
+        return true;
+    }
+
+    return false;
+}
+
+bool Frame::apply_canny() {
+    if(!raw_frame.empty()){
+        cv::Mat temp;
+
+        cv::cvtColor(raw_frame, temp, cv::COLOR_BGR2GRAY);
+        cv::Canny(temp, temp, 0, 150, 3);
+
+        set_raw_frame(temp);
+        return true;
+    }
+
+    return false;
+}
