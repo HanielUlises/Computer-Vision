@@ -6,10 +6,11 @@ import com.app.frame 1.0
 
 Page {
     anchors.fill: parent
+    property int type: 0
 
     Connections {
         target: video_thread
-        onUpdateView: selectedImage.setRawFrame(raw_frame)
+        onUpdateView: selectedImage.set_raw_frame(raw_frame)
     }
 
     Rectangle {
@@ -27,9 +28,8 @@ Page {
 
     ColumnLayout {
         id: imageContainer
-        width: 640
-        height: 480
-
+        width: parent.width * 0.5
+        height: parent.height * 0.6
         anchors.top: bar.bottom
         anchors.topMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
@@ -37,50 +37,51 @@ Page {
         Image {
             id: logo
             source: "qrc:/qml/logo.png"
-
             Layout.preferredWidth: 50
             Layout.preferredHeight: 50
-
-            sourceSize.width: 50
-            sourceSize.height: 50
-
             fillMode: Image.PreserveAspectFit
-
-            anchors {
-                top: parent.top
-                left: parent.left
-                topMargin: 8
-                leftMargin: 8
-            }
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
         }
-
 
         Frame {
             id: selectedImage
             Layout.preferredWidth: imageContainer.width
             Layout.preferredHeight: imageContainer.height
-            visible: false
+            visible: true
         }
     }
 
     RowLayout {
-        anchors.top: imageContainer.bottom
-        anchors.topMargin: 10
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
-        width: parent.width * 0.6
-        spacing: width * 0.2
+        width: parent.width * 0.7
+        spacing: width * 0.1
 
         Button {
             text: "Open Video"
-            Layout.preferredWidth: parent.width * 0.4
-            onClicked: videoDialog.open()
+            Layout.preferredWidth: parent.width * 0.3
+            onClicked: {
+                type = 0
+                videoDialog.open()
+            }
+        }
+
+        Button {
+            text: "Subtract BG"
+            Layout.preferredWidth: parent.width * 0.3
+            onClicked: {
+                type = 1
+                videoDialog.open()
+            }
         }
 
         Button {
             text: "Go Back"
-            Layout.preferredWidth: parent.width * 0.4
+            Layout.preferredWidth: parent.width * 0.3
             onClicked: loader.pop()
         }
+
     }
 
     FileDialog {
@@ -88,9 +89,15 @@ Page {
         title: "Choose Video"
         selectExisting: true
         onAccepted: {
-            picture.visible = false
             selectedImage.visible = true
-            video_thread.run_capture(videoDialog.fileUrl)
+            switch(type) {
+                case 0:
+                    video_thread.run_capture(videoDialog.fileUrl)
+                    break
+                case 1:
+                    video_thread.run_background_subtraction(videoDialog.fileUrl)
+                    break
+            }
         }
     }
 }
