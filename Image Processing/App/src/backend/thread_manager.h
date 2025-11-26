@@ -10,9 +10,13 @@ class Thread_Manager : public QObject {
         Q_OBJECT
         QThread video_thread;
         File_Capture video_capture;
+
     public:
         explicit Thread_Manager(QObject *parent = nullptr);
         Q_INVOKABLE void run_capture(QString url);
+        Q_INVOKABLE void run_background_subtraction(QString url);
+        Q_INVOKABLE void test_green_frame();
+
     signals:
         void update_view(cv::Mat frame);
     

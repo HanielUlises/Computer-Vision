@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQmlComponent>
 
 #include "backend/frame.h"
 #include "backend/thread_manager.h"
@@ -11,6 +12,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<Frame>("com.app.frame", 1, 0, "Frame");
+    qRegisterMetaType<cv::Mat>("cv::Mat");
+
 
     Thread_Manager* video_thread = new Thread_Manager(&app);
 

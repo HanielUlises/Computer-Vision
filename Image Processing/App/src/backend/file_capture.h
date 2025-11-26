@@ -5,8 +5,13 @@
 #include <opencv2/core/utility.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/video.hpp>
 
 #include <QObject>
+#include <QUrl>
+#include <QDebug>
+#include <QThread>
 
 class File_Capture : public QObject{
     Q_OBJECT
@@ -23,6 +28,7 @@ class File_Capture : public QObject{
     
     public slots:
         bool open_video();
+        bool subtract_background();
 };
 
 #endif

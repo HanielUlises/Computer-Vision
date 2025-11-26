@@ -25,7 +25,7 @@ class Frame : public QQuickPaintedItem{
         
         void paint(QPainter *painter);
         Q_INVOKABLE void set_raw_frame(const cv::Mat &value);
-        void set_frame(const QImage &value);
+        Q_INVOKABLE void set_frame(const QImage &value);
         cv::Mat get_raw_frame() const;
         QImage get_frame() const;
 

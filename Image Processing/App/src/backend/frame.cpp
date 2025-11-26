@@ -1,7 +1,9 @@
 #include "frame.h"
 
-Frame::Frame(QQuickPaintedItem *parent) : QQuickPaintedItem(parent) {
-
+Frame::Frame(QQuickPaintedItem *parent)
+    : QQuickPaintedItem(parent)
+{
+    setFlag(QQuickPaintedItem::ItemHasContents, true);  
 }
 
 void Frame::paint(QPainter *painter) {
