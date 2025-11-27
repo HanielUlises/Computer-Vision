@@ -18,6 +18,7 @@ class Thread_Manager : public QObject {
         Q_INVOKABLE void run_color_detection(QString url);
         Q_INVOKABLE void run_camera(); 
         Q_INVOKABLE void run_face_detection(QString url);
+        Q_INVOKABLE void run_track_yolo(QString url);
         
     signals:
         void update_view(cv::Mat frame);

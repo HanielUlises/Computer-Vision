@@ -99,7 +99,10 @@
     "eigenvalues": "cpp",
     "typeindex": "cpp",
     "qquickpainteditem": "cpp",
-    "qpainter": "cpp"
+    "qpainter": "cpp",
+    "qdebug": "cpp",
+    "qurl": "cpp",
+    "qobject": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled",
   "C_Cpp.intelliSenseEngine": "clang",
