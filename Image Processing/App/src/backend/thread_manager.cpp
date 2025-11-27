@@ -19,7 +19,7 @@ void Thread_Manager::receive_frame(cv::Mat frame){
     emit(update_view(frame));
 }
 
-void  Thread_Manager::run_background_subtraction(QString url) {
+void Thread_Manager::run_background_subtraction(QString url) {
     video_capture.set_url(url);
 
     connect(&video_thread, &QThread::started, &video_capture, &File_Capture::subtract_background);

@@ -29,7 +29,8 @@ Page {
     ColumnLayout {
         id: imageContainer
         width: parent.width * 0.5
-        height: parent.height * 0.6
+        height: parent.height * 0.5
+
         anchors.top: bar.bottom
         anchors.topMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
@@ -87,16 +88,15 @@ Page {
     FileDialog {
         id: videoDialog
         title: "Choose Video"
-        selectExisting: true
         onAccepted: {
             selectedImage.visible = true
             switch(type) {
                 case 0:
-                    video_thread.run_capture(videoDialog.fileUrl)
-                    break
+                    video_thread.run_capture(videoDialog.fileUrl);
+                    break;
                 case 1:
-                    video_thread.run_background_subtraction(videoDialog.fileUrl)
-                    break
+                    video_thread.run_background_subtraction(videoDialog.fileUrl);
+                    break;
             }
         }
     }
