@@ -62,24 +62,24 @@ Page {
         Button {
             text: "Open Video"
             onClicked: {
-                type = 0
-                videoDialog.open()
+                type = 0;
+                videoDialog.open();
             }
         }
 
         Button {
             text: "Subtract BG"
             onClicked: {
-                type = 1
-                videoDialog.open()
+                type = 1;
+                videoDialog.open();
             }
         }
 
         Button {
             text: "Detect Color"
             onClicked: {
-                type = 2
-                videoDialog.open()
+                type = 2;
+                videoDialog.open();
             }
         }
 
@@ -95,7 +95,15 @@ Page {
             text: "Detect Faces"
             onClicked: {
                 type = 3;
-                videoDialog.open()
+                videoDialog.open();
+            }
+        }
+
+        Button{
+            text: "Yolo V2"
+            onClicked: {
+                type = 4;
+                videoDialog.open();
             }
         }
 
@@ -123,6 +131,9 @@ Page {
                     break;
                 case 3:
                     video_thread.run_face_detection(videoDialog.fileUrl);
+                    break;
+                case 4:
+                    video_thread.run_track_yolo(videoDialog.fileUrl);
                     break;
             }
         }
