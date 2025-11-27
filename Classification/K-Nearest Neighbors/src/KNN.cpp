@@ -1,4 +1,4 @@
-#include "knn.h"
+#include "KNN.hpp"
 #include <limits>
 #include <algorithm>
 #include <numeric>
