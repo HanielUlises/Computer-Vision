@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <opencv2/opencv.hpp>
-#include "knn.hpp"
+#include "KNN.hpp"
 
 class main_window : public QWidget {
 public:
