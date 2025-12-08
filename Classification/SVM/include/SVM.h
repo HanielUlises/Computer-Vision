@@ -2,69 +2,65 @@
 #define SVM_H
 
 #include <vector>
-#include <opencv2/opencv.hpp>
-#include <Eigen/Dense>
-#include <iostream>
 #include <map>
 #include <string>
-#include <tuple>
 
-enum KernelType {
-    LINEAR,
-    POLY,
-    RBF,
-    SIGMOID
+#include <opencv2/opencv.hpp>
+#include <opencv2/ml.hpp>
+
+#include <Eigen/Dense>
+
+enum kernel_type {
+    KERNEL_LINEAR,
+    KERNEL_POLY,
+    KERNEL_RBF,
+    KERNEL_SIGMOID
 };
 
-struct SVMParameters {
-    KernelType kernelType;
+struct svm_parameters {
+    kernel_type kernel;
     double C;
     double gamma;
     int degree;
     double coef0;
 };
 
-class SVM {
+class svm_classifier {
 public:
-    SVM(const SVMParameters& params);
+    svm_classifier(const svm_parameters& params);
 
-    // Train the SVM model
-    void train(const std::vector<cv::Mat>& images, const std::vector<int>& labels);
+    void train(const std::vector<cv::Mat>& images,
+               const std::vector<int>& labels);
 
-    // Predict the class of a given image
     int predict(const cv::Mat& image);
 
-    // Evaluate the model on a test set
-    std::map<std::string, double> evaluate(const std::vector<cv::Mat>& testImages, const std::vector<int>& testLabels);
+    std::map<std::string, double> evaluate(const std::vector<cv::Mat>& images,
+                                           const std::vector<int>& labels);
 
-    // Enable or disable logging
-    void setLogging(bool enableLogging);
+    void set_logging(bool enable);
 
-    // Display a summary of the model and its parameters
-    void displaySummary();
+    void summary();
 
 private:
-    SVMParameters params;  // SVM parameters
-    cv::Ptr<cv::ml::SVM> model;  // OpenCV's SVM model
-    bool loggingEnabled;  // Logging flag
+    svm_parameters params_;
+    cv::Ptr<cv::ml::SVM> model_;
+    bool logging_enabled_;
 
-    // Convert an image to a feature vector
-    Eigen::VectorXd extractFeatures(const cv::Mat& image);
+    Eigen::VectorXd extract_features(const cv::Mat& image);
+    Eigen::VectorXd normalize_features(const Eigen::VectorXd& vec);
 
-    // Log a message if logging is enabled
-    void logMessage(const std::string& message);
+    cv::Mat eigen_to_mat_row(const Eigen::VectorXd& vec);
+    Eigen::VectorXd mat_to_eigen_row(const cv::Mat& mat);
 
-    // Calculate and print confusion matrix
-    void calculateConfusionMatrix(const std::vector<int>& trueLabels, const std::vector<int>& predictedLabels, int numClasses);
+    void log_message(const std::string& msg);
 
-    // Calculate and print precision, recall, and F1-score
-    void calculatePrecisionRecallF1(const std::vector<int>& trueLabels, const std::vector<int>& predictedLabels, int numClasses);
+    void compute_confusion_matrix(const std::vector<int>& y_true,
+                                  const std::vector<int>& y_pred,
+                                  int num_classes);
 
-    // Generate and save ROC curves for binary classification
-    void generateROCCurve(const std::vector<int>& trueLabels, const std::vector<double>& decisionValues);
-
-    // Normalize features for consistency
-    Eigen::VectorXd normalizeFeatures(const Eigen::VectorXd& features);
+    void compute_precision_recall_f1(const std::vector<int>& y_true,
+                                     const std::vector<int>& y_pred,
+                                     int num_classes);
 };
 
 #endif // SVM_H
