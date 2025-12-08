@@ -1,4 +1,4 @@
-# Computer Vision and Image Processing Techniques
+# High Performance Computer Vision
 
 This repository is an ongoing and layered exploration of **image processing** and **computer vision**, primarily using **OpenCV** in combination with **modern C++**. It is not a single unified project, but a collection of pedagogical examples and project-based investigations, designed to balance conceptual clarity with hands-on experimentation.
 
