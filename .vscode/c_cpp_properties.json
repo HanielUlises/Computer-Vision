@@ -29,7 +29,12 @@
         "/usr/include/x86_64-linux-gnu/qt5/QtGui",
         "/usr/include/x86_64-linux-gnu/qt5/QtWidgets",
         "/usr/include/x86_64-linux-gnu/qt5/QtQuick",
-        "/usr/include/x86_64-linux-gnu/qt5/QtQml"
+        "/usr/include/x86_64-linux-gnu/qt5/QtQml",
+        
+        "/opt/libtorch/include",
+        "/opt/libtorch/include/torch/csrc/api/include"
+
+        
       ],
 
       "defines": [
