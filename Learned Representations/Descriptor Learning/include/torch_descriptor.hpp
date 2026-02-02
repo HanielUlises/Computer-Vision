@@ -10,7 +10,7 @@ public:
     Embedding compute(
         const cv::Mat& image,
         const cv::KeyPoint& kp
-    ) const;
+    );
 
 private:
     PatchNet net_;

@@ -11,7 +11,7 @@ TorchPatchDescriptor::TorchPatchDescriptor(
 Embedding TorchPatchDescriptor::compute(
     const cv::Mat& image,
     const cv::KeyPoint& kp
-) const {
+) {
     cv::Rect roi(
         kp.pt.x - 16,
         kp.pt.y - 16,
