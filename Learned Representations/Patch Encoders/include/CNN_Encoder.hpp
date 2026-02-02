@@ -1,9 +1,9 @@
 #pragma once
 #include "Patch_Encoder.hpp"
 
-class CNN_Encoder : public Patch_Encoder {
+class CNN_EncoderImpl : public Patch_Encoder {
 public:
-    CNN_Encoder(int out_dim = 128);
+    explicit CNN_EncoderImpl(int out_dim = 128);
 
     torch::Tensor forward(torch::Tensor x) override;
     int outputDim() const override;
