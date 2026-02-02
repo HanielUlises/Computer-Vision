@@ -1,6 +1,6 @@
 #include "CNN_Encoder.hpp"
 
-CNN_Encoder::CNN_Encoder(int out_dim)
+CNN_EncoderImpl::CNN_EncoderImpl(int out_dim)
     : out_dim_(out_dim) {
     net = torch::nn::Sequential(
         torch::nn::Conv2d(torch::nn::Conv2dOptions(1, 32, 3).padding(1)),
@@ -21,10 +21,10 @@ CNN_Encoder::CNN_Encoder(int out_dim)
     register_module("net", net);
 }
 
-torch::Tensor CNN_Encoder::forward(torch::Tensor x) {
+torch::Tensor CNN_EncoderImpl::forward(torch::Tensor x) {
     return net->forward(x);
 }
 
-int CNN_Encoder::outputDim() const {
+int CNN_EncoderImpl::outputDim() const {
     return out_dim_;
 }
