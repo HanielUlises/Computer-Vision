@@ -1,27 +1,15 @@
 #pragma once
 #include <torch/torch.h>
 #include <opencv2/opencv.hpp>
-#include <filesystem>
 #include <vector>
 
-struct PatchSample {
-    torch::Tensor patch;
-    int label;
-};
-
-// Simple image-patch dataset.
-// Directory structure:
-// root/
-//   class_0/*.png
-//   class_1/*.png
 class PatchDataset {
 public:
-    explicit PatchDataset(const std::string& root);
+    PatchDataset(const std::vector<std::string>& image_paths, int patch_size);
 
-    PatchSample get_random() const;
-    PatchSample get_same(int label) const;
-    PatchSample get_diff(int label) const;
+    torch::Tensor sampleBatch(int batch_size);
 
 private:
-    std::vector<std::pair<std::string, int>> samples_;
+    std::vector<cv::Mat> images_;
+    int patch_size_;
 };
