@@ -52,7 +52,7 @@ onnx/
 
 ### Installing ONNX Runtime (Ubuntu)
 ```bash
-# Download the GPU release from https://github.com/microsoft/onnxruntime/releases!!
+# Download the GPU release from https://github.com/microsoft/onnxruntime/releases !!
 wget https://github.com/microsoft/onnxruntime/releases/download/v1.18.1/\
 onnxruntime-linux-x64-gpu-1.18.1.tgz
 tar xzf onnxruntime-linux-x64-gpu-1.18.1.tgz
