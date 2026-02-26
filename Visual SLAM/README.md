@@ -1,6 +1,6 @@
 # Visual SLAM
 
-Monocular visual odometry pipeline built on ORB features, Essential matrix bootstrapping, and PnP RANSAC tracking. No g2o, no Ceres — raw OpenCV + Eigen3.
+Monocular visual odometry pipeline built on ORB features, Essential matrix bootstrapping, and PnP RANSAC tracking. OpenCV4 + Eigen3.
 
 ---
 
