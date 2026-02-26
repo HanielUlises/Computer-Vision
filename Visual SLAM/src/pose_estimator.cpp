@@ -85,9 +85,9 @@ PoseEstimationResult PoseEstimator::estimate_pnp(
         for (int j = 0; j < 3; ++j)
             Reig(i, j) = R.at<double>(i, j);
     pose.linear() = Reig;
-    pose.translation() = {tvec.at<double>(0),
-                           tvec.at<double>(1),
-                           tvec.at<double>(2)};
+    pose.translation() = Vec3d(tvec.at<double>(0),
+                               tvec.at<double>(1),
+                               tvec.at<double>(2));
 
     return {pose, inlier_idx, static_cast<int>(inlier_idx.size()), true};
 }
@@ -159,7 +159,7 @@ SE3d PoseEstimator::recover_pose_from_essential(
         for (int j = 0; j < 3; ++j)
             Reig(i, j) = R.at<double>(i, j);
     pose.linear() = Reig;
-    pose.translation() = {t.at<double>(0), t.at<double>(1), t.at<double>(2)};
+    pose.translation() = Vec3d(t.at<double>(0), t.at<double>(1), t.at<double>(2));
     return pose;
 }
 
