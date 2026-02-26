@@ -1,0 +1,26 @@
+%YAML:1.0
+
+# TUM RGB-D Benchmark - freiburg1 intrinsics
+# Source: https://cvg.cit.tum.de/data/datasets/rgbd-dataset/file_formats
+
+fx: 517.3
+fy: 516.5
+cx: 318.6
+cy: 255.3
+
+dist_coeffs: !!opencv-matrix
+   rows: 1
+   cols: 5
+   dt: d
+   data: [ 0.2624, -0.9531, -0.0054, 0.0026, 1.1633 ]
+
+# EuRoC MAV cam0
+# fx: 458.654
+# fy: 457.296
+# cx: 367.215
+# cy: 248.375
+# dist_coeffs: !!opencv-matrix
+#    rows: 1
+#    cols: 4
+#    dt: d
+#    data: [ -0.28340811, 0.07395907, 0.00019359, 1.76187114e-05 ]
