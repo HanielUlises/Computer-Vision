@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -DNDEBUG")
+set(OpenCV_DIR /usr/local/lib/cmake/opencv4)
 
 find_package(OpenCV REQUIRED COMPONENTS
     core highgui imgproc features2d calib3d video viz)
