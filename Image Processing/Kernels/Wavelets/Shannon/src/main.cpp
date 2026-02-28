@@ -1,75 +1,33 @@
+#include <iostream>
+#include <opencv2/opencv.hpp>
 #include "shannon.hpp"
 
-#include <opencv2/imgproc.hpp>
-#include <cmath>
-#include <vector>
-
-Shannon::Shannon(double f_low, double f_high)
-    : f_low_(f_low), f_high_(f_high)
+int main(int argc, char** argv)
 {
-}
-
-void Shannon::fftShift(cv::Mat& img)
-{
-    int cx = img.cols / 2;
-    int cy = img.rows / 2;
-
-    cv::Mat q0(img, cv::Rect(0, 0, cx, cy));
-    cv::Mat q1(img, cv::Rect(cx, 0, cx, cy));
-    cv::Mat q2(img, cv::Rect(0, cy, cx, cy));
-    cv::Mat q3(img, cv::Rect(cx, cy, cx, cy));
-
-    cv::Mat tmp;
-    q0.copyTo(tmp); q3.copyTo(q0); tmp.copyTo(q3);
-    q1.copyTo(tmp); q2.copyTo(q1); tmp.copyTo(q2);
-}
-
-void Shannon::createBandPassMask(cv::Mat& mask) const
-{
-    int rows = mask.rows;
-    int cols = mask.cols;
-
-    double cx = cols / 2.0;
-    double cy = rows / 2.0;
-    double maxRadius = std::sqrt(cx * cx + cy * cy);
-
-    for (int y = 0; y < rows; ++y) {
-        for (int x = 0; x < cols; ++x) {
-
-            double dx = x - cx;
-            double dy = y - cy;
-            double r = std::sqrt(dx * dx + dy * dy);
-
-            double normFreq = r / maxRadius;
-
-            mask.at<float>(y, x) =
-                (normFreq >= f_low_ && normFreq <= f_high_) ? 1.0f : 0.0f;
-        }
+    if (argc < 2) {
+        std::cout << "Usage: ./ShannonDemo <image_path>\n";
+        return 1;
     }
-}
 
-void Shannon::apply(const cv::Mat& src, cv::Mat& dst) const
-{
-    CV_Assert(src.type() == CV_32F);
+    cv::Mat img_u8 = cv::imread(argv[1], cv::IMREAD_GRAYSCALE);
+    if (img_u8.empty()) {
+        std::cout << "Failed to load image.\n";
+        return 1;
+    }
 
-    cv::Mat complexImg;
-    cv::dft(src, complexImg, cv::DFT_COMPLEX_OUTPUT);
+    cv::Mat img;
+    img_u8.convertTo(img, CV_32F, 1.0 / 255.0);
 
-    fftShift(complexImg);
+    Shannon sh(0.1, 0.3);   // band-pass range
+    cv::Mat output;
 
-    cv::Mat mask(src.size(), CV_32F);
-    createBandPassMask(mask);
+    sh.apply(img, output);
 
-    std::vector<cv::Mat> channels(2);
-    cv::split(complexImg, channels);
+    cv::Mat vis;
+    cv::normalize(output, vis, 0, 1, cv::NORM_MINMAX);
+    cv::imshow("Input", img);
+    cv::imshow("Shannon Output", vis);
+    cv::waitKey(0);
 
-    channels[0] = channels[0].mul(mask);
-    channels[1] = channels[1].mul(mask);
-
-    cv::merge(channels, complexImg);
-
-    fftShift(complexImg);
-
-    cv::idft(complexImg, dst,
-             cv::DFT_REAL_OUTPUT | cv::DFT_SCALE);
+    return 0;
 }
