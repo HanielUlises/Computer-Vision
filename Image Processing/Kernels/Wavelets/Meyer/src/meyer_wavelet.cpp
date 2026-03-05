@@ -66,11 +66,13 @@ Meyer2D::MatrixC Meyer2D::generate(int width,int height,double scale){
 
     MatrixC result(M,N);
 
+    double norm=1.0/static_cast<double>(N*M);
+
     for(int y=0;y<M;++y){
         for(int x=0;x<N;++x){
             int idx=y*N+x;
             result(y,x)=
-                Complex(spatial[idx][0],spatial[idx][1])/(N*M);
+                Complex(spatial[idx][0],spatial[idx][1])*norm;
         }
     }
 
