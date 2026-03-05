@@ -1,20 +1,24 @@
-#ifndef MEYER_WAVELET_HPP
-#define MEYER_WAVELET_HPP
+#ifndef MEYER2D_HPP
+#define MEYER2D_HPP
 
-#include <vector>
+#include <Eigen/Dense>
+#include <complex>
 
-class MeyerWavelet
+class Meyer2D
 {
 public:
-    // Generate 1D Meyer wavelet sampled in time domain
-    static std::vector<double> generate(
-        int size,
-        double dt = 0.01
+    using Complex = std::complex<double>;
+    using MatrixC = Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic>;
+
+    static MatrixC generate(
+        int width,
+        int height,
+        double scale
     );
 
 private:
     static double nu(double x);
-    static double psi_hat(double omega);
+    static double psi_hat_radial(double omega);
 };
 
 #endif
