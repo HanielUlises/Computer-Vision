@@ -2,6 +2,7 @@
 
 #include "kernel2d.hpp"
 
+#pragma once
 
 // Gradient kernels
 
@@ -171,3 +172,6 @@ constexpr Kernel2D<2,2,float> RobertsY {{
     { -1,  0 }
 }};
 
+#include "GaussianDerivatives/include/GaussianFirstDerivative.hpp"
+#include "GaussianDerivatives/include/GaussianSecondDerivative.hpp"
+#include "GaussianDerivatives/include/DOG.hpp"
