@@ -83,3 +83,7 @@ nsight-compute-report*
 Thumbs.db
 *.swp
 *~
+
+# Files
+rgbd_dataset_freiburg1_xyz*
+*.tgz
