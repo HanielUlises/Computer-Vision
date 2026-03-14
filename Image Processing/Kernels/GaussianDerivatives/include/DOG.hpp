@@ -1,25 +1,25 @@
 #ifndef DOG_HPP
 #define DOG_HPP
 
-#include <vector>
+#include <Eigen/Dense>
 
 class DOG{
-public:
+    public:
 
-    static std::vector<double> generate(
-        int width,
-        int height,
-        double sigma1,
-        double sigma2
-    );
+        static Eigen::MatrixXd generate(
+            int width,
+            int height,
+            double sigma1,
+            double sigma2
+        );
 
-private:
+    private:
 
-    static double gaussian(
-        double x,
-        double y,
-        double sigma
-    );
+        static double gaussian(
+            double x,
+            double y,
+            double sigma
+        );
 };
 
 #endif
